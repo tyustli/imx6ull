@@ -1,0 +1,12 @@
+menu "Hardware Drivers Config"
+
+menu "Onboard Peripheral Drivers"
+endmenu
+
+menu "On-chip Peripheral Drivers"
+endmenu
+
+menu "Board extended module Drivers"
+endmenu
+
+endmenu
