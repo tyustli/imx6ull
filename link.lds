@@ -9,12 +9,10 @@ SECTIONS
     __text_start = .;
     .text :
     {
-        build/libcpu/start.o
-        build/applications/main.o
         *(.vectors)
         *(.text)
         *(.text.*)
-    KEEP(*(.fini))
+        KEEP(*(.fini))
 
         /* section information for finsh shell */
         . = ALIGN(4);

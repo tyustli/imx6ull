@@ -1,7 +1,16 @@
-.global _start_main          /* 全局标号 */
+.section .vectors
+.code 32
 
-_start_main:
+.global system_vectors
+system_vectors:
+    ldr pc, _vector_reset
 
+_vector_reset:
+    .word reset
+
+.section .text
+.global reset
+reset:
     /* 进入SVC模式 */
     mrs r0, cpsr
     bic r0, r0, #0x1f   /* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4  */
