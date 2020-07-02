@@ -51,11 +51,6 @@ void clk_enable(void)
     CCM_CCGR6 = 0xffffffff;
 }
 
-/*
- * @description	: 初始化LED对应的GPIO
- * @param 		: 无
- * @return 		: 无
- */
 void led_init(void)
 {
     /* 1、初始化IO复用 */
@@ -80,11 +75,6 @@ void led_init(void)
     GPIO1_DR = 0X0;
 }
 
-/*
- * @description	: 打开LED灯
- * @param 		: 无
- * @return 		: 无
- */
 void led_on(void)
 {
     /* 
@@ -93,11 +83,6 @@ void led_on(void)
     GPIO1_DR &= ~(1 << 3);
 }
 
-/*
- * @description	: 关闭LED灯
- * @param 		: 无
- * @return 		: 无
- */
 void led_off(void)
 {
     /*    
@@ -106,11 +91,6 @@ void led_off(void)
     GPIO1_DR |= (1 << 3);
 }
 
-/*
- * @description	: 短时间延时函数
- * @param - n	: 要延时循环次数(空操作循环次数，模式延时)
- * @return 		: 无
- */
 void delay_short(volatile unsigned int n)
 {
     while (n--)
@@ -118,12 +98,6 @@ void delay_short(volatile unsigned int n)
     }
 }
 
-/*
- * @description	: 延时函数,在396Mhz的主频下
- * 			  	  延时时间大约为1ms
- * @param - n	: 要延时的ms数
- * @return 		: 无
- */
 void delay(volatile unsigned int n)
 {
     while (n--)
@@ -132,23 +106,18 @@ void delay(volatile unsigned int n)
     }
 }
 
-/*
- * @description	: mian函数
- * @param 	    : 无
- * @return 		: 无
- */
-int main(void)
+int main(int argc, char *argv[])
 {
-    clk_enable(); /* 使能所有的时钟		 	*/
-    led_init();   /* 初始化led 			*/
+    clk_enable();
+    led_init();
 
-    while (1) /* 死循环 				*/
+    while (1)
     {
-        led_off();  /* 关闭LED   			*/
-        delay(100); /* 延时大约500ms 		*/
+        led_off();
+        delay(500);
 
-        led_on();   /* 打开LED		 	*/
-        delay(100); /* 延时大约500ms 		*/
+        led_on();
+        delay(500);
     }
 
     return 0;

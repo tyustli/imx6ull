@@ -24,14 +24,14 @@
 
 .global system_vectors
 system_vectors:
-    ldr pc, _vector_reset
-    ldr pc, _vector_undef
-    ldr pc, _vector_swi
-    ldr pc, _vector_pabt
-    ldr pc, _vector_dabt
-    ldr pc, _vector_resv
-    ldr pc, _vector_irq
-    ldr pc, _vector_fiq
+    ldr pc, _vector_reset    /* 复位中断 */
+    ldr pc, _vector_undef    /* 未定义中断 */
+    ldr pc, _vector_swi      /* SVC 中断 */
+    ldr pc, _vector_pabt     /* 预取终止中断 */
+    ldr pc, _vector_dabt     /* 数据终止中断 */
+    ldr pc, _vector_resv     /* 未使用中断 */
+    ldr pc, _vector_irq      /* IRQ 中断 */
+    ldr pc, _vector_fiq      /* FIQ (快速中断) */
 
 _vector_reset:
     .word reset
@@ -58,30 +58,56 @@ _vector_fiq:
     .section .text
     .global reset
 reset:
+    cpsid i                                 /* 关闭全局中断 */
+
+    /* 关闭I,DCache和MMU 
+    * 采取读-改-写的方式。
+    */
+    mrc     p15, 0, r0, c1, c0, 0     /* 读取CP15的C1寄存器到R0中                                */
+    bic     r0,  r0, #(0x1 << 12)     /* 清除C1寄存器的bit12位(I位)，关闭I Cache                 */
+    bic     r0,  r0, #(0x1 <<  2)     /* 清除C1寄存器的bit2(C位)，关闭D Cache                    */
+    bic     r0,  r0, #0x2             /* 清除C1寄存器的bit1(A位)，关闭对齐                       */
+    bic     r0,  r0, #(0x1 << 11)     /* 清除C1寄存器的bit11(Z位)，关闭分支预测                  */
+    bic     r0,  r0, #0x1             /* 清除C1寄存器的bit0(M位)，关闭MMU                       */
+    mcr     p15, 0, r0, c1, c0, 0     /* 将r0寄存器中的值写入到CP15的C1寄存器中                  */
+
+    /* 设置各个模式下的栈指针，
+    * 注意：IMX6UL的堆栈是向下增长的！
+    * 堆栈指针地址一定要是4字节地址对齐的！！！
+    * DDR范围:0X80000000~0X9FFFFFFF
+    */
+    /* 进入IRQ模式 */
+    mrs r0, cpsr
+    bic r0, r0, #0x1f   /* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4          */
+    orr r0, r0, #0x12   /* r0或上0x13,表示使用IRQ模式                         */
+    msr cpsr, r0        /* 将r0 的数据写入到cpsr_c中                          */
+    ldr sp, =0x80600000 /* 设置IRQ模式下的栈首地址为0X80600000,大小为2MB       */
+
+    /* 进入SYS模式 */
+    mrs r0, cpsr
+    bic r0, r0, #0x1f   /* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4        */
+    orr r0, r0, #0x1f   /* r0或上0x13,表示使用SYS模式                       */
+    msr cpsr, r0        /* 将r0 的数据写入到cpsr_c中                        */
+    ldr sp, =0x80400000 /* 设置SYS模式下的栈首地址为0X80400000,大小为2MB     */
+
     /* 进入SVC模式 */
     mrs r0, cpsr
-    bic r0, r0, #Mode_SYS    /* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4  */
-    orr r0, r0, #Mode_SVC    /* r0或上0x13,表示使用SVC模式                  */
-    msr cpsr, r0             /* 将r0 的数据写入到cpsr_c中                   */
+    bic r0, r0, #0x1f   /* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4    */
+    orr r0, r0, #0x13   /* r0或上0x13,表示使用SVC模式                   */
+    msr cpsr, r0        /* 将r0 的数据写入到cpsr_c中                    */
+    ldr sp, =0X80200000 /* 设置SVC模式下的栈首地址为0X80200000,大小为2MB */
 
-    ldr sp,=0X80200000  /* 设置栈指针            */
-    b main              /* 跳转到main函数        */
+    cpsie i             /* 打开全局中断  */
+
+    b main              /* 跳转到main函数  */
 
     /* 中断 */
     .align  5
-vector_fiq:
-    b       .
-
-    .align  5
-vector_irq:
+vector_undef:
     b       .
 
     .align 5
 vector_swi:
-    b       .
-
-    .align  5
-vector_undef:
     b       .
 
     .align  5
@@ -94,4 +120,12 @@ vector_dabt:
 
     .align  5
 vector_resv:
+    b       .
+
+    .align  5
+vector_irq:
+    b       .
+
+    .align  5
+vector_fiq:
     b       .
