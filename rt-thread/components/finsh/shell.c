@@ -15,7 +15,7 @@
  * 2011-02-23     Bernard      fix variable section end issue of finsh shell
  *                             initialization when use GNU GCC compiler.
  * 2016-11-26     armink       add password authentication
- * 2018-07-02     aozima       add custome prompt support.
+ * 2018-07-02     aozima       add custom prompt support.
  */
 
 #include <rthw.h>
@@ -39,6 +39,14 @@ static struct rt_thread finsh_thread;
 ALIGN(RT_ALIGN_SIZE)
 static char finsh_thread_stack[FINSH_THREAD_STACK_SIZE];
 struct finsh_shell _shell;
+#endif
+
+/* finsh symtab */
+#ifdef FINSH_USING_SYMTAB
+struct finsh_syscall *_syscall_table_begin  = NULL;
+struct finsh_syscall *_syscall_table_end    = NULL;
+struct finsh_sysvar *_sysvar_table_begin    = NULL;
+struct finsh_sysvar *_sysvar_table_end      = NULL;
 #endif
 
 struct finsh_shell *shell;
@@ -156,9 +164,9 @@ void finsh_set_prompt_mode(rt_uint32_t prompt_mode)
     shell->prompt_mode = prompt_mode;
 }
 
-#ifdef RT_USING_DEVICE
 static int finsh_getchar(void)
 {
+#ifdef RT_USING_DEVICE
 #ifdef RT_USING_POSIX
     return getchar();
 #else
@@ -170,10 +178,11 @@ static int finsh_getchar(void)
 
     return (int)ch;
 #endif
-}
 #else
-extern int finsh_getchar(void);
+    extern char rt_hw_console_getchar(void);
+    return rt_hw_console_getchar();
 #endif
+}
 
 #if !defined(RT_USING_POSIX) && defined(RT_USING_DEVICE)
 static rt_err_t finsh_rx_ind(rt_device_t dev, rt_size_t size)

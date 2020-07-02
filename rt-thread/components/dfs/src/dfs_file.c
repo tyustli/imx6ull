@@ -369,8 +369,7 @@ int dfs_file_stat(const char *path, struct stat *buf)
 
     if ((fs = dfs_filesystem_lookup(fullpath)) == NULL)
     {
-        LOG_E(
-                "can't find mounted filesystem on this path:%s", fullpath);
+        LOG_E("can't find mounted filesystem on this path:%s", fullpath);
         rt_free(fullpath);
 
         return -ENOENT;
@@ -399,8 +398,7 @@ int dfs_file_stat(const char *path, struct stat *buf)
         if (fs->ops->stat == NULL)
         {
             rt_free(fullpath);
-            LOG_E(
-                    "the filesystem didn't implement this function");
+            LOG_E("the filesystem didn't implement this function");
 
             return -ENOSYS;
         }
@@ -482,6 +480,35 @@ __exit:
     return result;
 }
 
+/**
+ * this function is will cause the regular file referenced by fd
+ * to be truncated to a size of precisely length bytes.
+ *
+ * @param fd the file descriptor.
+ * @param length the length to be truncated.
+ *
+ * @return the status of truncated.
+ */
+int dfs_file_ftruncate(struct dfs_fd *fd, off_t length)
+{
+    int result;
+
+    /* fd is null or not a regular file system fd, or length is invalid */
+    if (fd == NULL || fd->type != FT_REGULAR || length < 0)
+        return -EINVAL;
+
+    if (fd->fops->ioctl == NULL)
+        return -ENOSYS;
+
+    result = fd->fops->ioctl(fd, RT_FIOFTRUNCATE, (void*)&length);
+
+    /* update current size */
+    if (result == 0)
+        fd->size = length;
+
+    return result;
+}
+
 #ifdef RT_USING_FINSH
 #include <finsh.h>
 
@@ -536,7 +563,7 @@ void ls(const char *pathname)
                     }
                     else
                     {
-                        rt_kprintf("%-25lu\n", stat.st_size);
+                        rt_kprintf("%-25lu\n", (unsigned long)stat.st_size);
                     }
                 }
                 else

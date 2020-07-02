@@ -22,7 +22,6 @@ static struct ulog_backend console;
 void ulog_console_backend_output(struct ulog_backend *backend, rt_uint32_t level, const char *tag, rt_bool_t is_raw,
         const char *log, size_t len)
 {
-
 #ifdef RT_USING_DEVICE
     rt_device_t dev = rt_console_get_device();
 

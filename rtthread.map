@@ -86,12 +86,6 @@ Discarded input sections
  .comment       0x00000000       0x6f build\kernel\src\components.o
  .ARM.attributes
                 0x00000000       0x2b build\kernel\src\components.o
- .text          0x00000000        0x0 build\kernel\src\cpu.o
- .data          0x00000000        0x0 build\kernel\src\cpu.o
- .bss           0x00000000        0x0 build\kernel\src\cpu.o
- .comment       0x00000000       0x6f build\kernel\src\cpu.o
- .ARM.attributes
-                0x00000000       0x2b build\kernel\src\cpu.o
  .text          0x00000000      0x134 build\kernel\src\idle.o
  .data          0x00000000        0x0 build\kernel\src\idle.o
  .bss           0x00000000      0x480 build\kernel\src\idle.o
@@ -313,7 +307,6 @@ LOAD build\libcpu\context.o
 LOAD build\libcpu\start.o
 LOAD build\kernel\src\clock.o
 LOAD build\kernel\src\components.o
-LOAD build\kernel\src\cpu.o
 LOAD build\kernel\src\idle.o
 LOAD build\kernel\src\ipc.o
 LOAD build\kernel\src\irq.o
@@ -341,7 +334,7 @@ LOAD d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../
                 0x87800000                . = ALIGN (0x4)
                 0x87800000                __text_start = .
 
-.text           0x87800000     0x3cec
+.text           0x87800000     0x3e9c
  *(.vectors)
  .vectors       0x87800000        0x8 build\libcpu\start.o
                 0x87800000                system_vectors
@@ -363,241 +356,244 @@ LOAD d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../
                 0x87800168                rt_hw_stack_init
  .text          0x87800170       0x1c build\libcpu\start.o
                 0x87800170                reset
- .text          0x8780018c       0xc4 build\kernel\src\clock.o
+ .text          0x8780018c       0xd0 build\kernel\src\clock.o
                 0x8780018c                rt_system_tick_init
                 0x87800190                rt_tick_get
                 0x878001a0                rt_tick_set
                 0x878001c0                rt_tick_increase
-                0x87800204                rt_tick_from_millisecond
- .text          0x87800250     0x1344 build\kernel\src\ipc.o
-                0x87800330                rt_sem_init
-                0x87800368                rt_sem_detach
-                0x87800388                rt_sem_create
-                0x878003bc                rt_sem_delete
-                0x878003dc                rt_sem_take
-                0x87800488                rt_sem_trytake
-                0x87800490                rt_sem_release
-                0x878004e8                rt_sem_control
-                0x8780052c                rt_mutex_init
-                0x87800574                rt_mutex_detach
-                0x87800594                rt_mutex_create
-                0x878005e0                rt_mutex_delete
-                0x87800600                rt_mutex_take
-                0x87800724                rt_mutex_release
-                0x8780080c                rt_mutex_control
-                0x87800814                rt_event_init
-                0x87800848                rt_event_detach
-                0x87800868                rt_event_create
-                0x8780089c                rt_event_delete
-                0x878008bc                rt_event_send
-                0x8780099c                rt_event_recv
-                0x87800ab8                rt_event_control
-                0x87800afc                rt_mb_init
-                0x87800b54                rt_mb_detach
-                0x87800b7c                rt_mb_create
-                0x87800c00                rt_mb_delete
-                0x87800c30                rt_mb_send_wait
-                0x87800d8c                rt_mb_send
-                0x87800d94                rt_mb_recv
-                0x87800efc                rt_mb_control
-                0x87800f50                rt_mq_init
-                0x87800ff8                rt_mq_detach
-                0x87801020                rt_mq_delete
-                0x87801050                rt_mq_create
-                0x87801124                rt_mq_send_wait
-                0x878012bc                rt_mq_send
-                0x878012c4                rt_mq_urgent
-                0x87801384                rt_mq_recv
-                0x87801518                rt_mq_control
- .text          0x87801594       0x74 build\kernel\src\irq.o
-                0x87801594                rt_interrupt_enter
-                0x878015bc                rt_interrupt_leave
-                0x878015e4                rt_interrupt_get_nest
- .text          0x87801608      0xba8 build\kernel\src\kservice.o
-                0x8780182c                rt_get_errno
-                0x87801860                rt_set_errno
-                0x87801898                _rt_errno
-                0x878018c8                memset
-                0x878018c8                rt_memset
-                0x87801964                memcpy
-                0x87801964                rt_memcpy
-                0x87801a34                rt_memmove
-                0x87801a34                memmove
-                0x87801a80                rt_memcmp
-                0x87801a80                memcmp
-                0x87801ab0                strcasecmp
-                0x87801ab0                rt_strcasecmp
-                0x87801b00                rt_strncpy
-                0x87801b38                rt_strncmp
-                0x87801b74                rt_strcmp
-                0x87801ba4                rt_strnlen
-                0x87801bcc                rt_strlen
-                0x87801bcc                strlen
-                0x87801bec                rt_strstr
-                0x87801bec                strstr
-                0x87801c58                strdup
-                0x87801c58                rt_strdup
-                0x87801c8c                rt_show_version
-                0x87801c90                rt_vsnprintf
-                0x87802098                rt_snprintf
-                0x87802098                snprintf
-                0x878020c0                rt_vsprintf
-                0x878020c0                vsprintf
-                0x878020d0                rt_sprintf
-                0x878020d0                sprintf
-                0x878020f8                rt_malloc_align
-                0x87802140                rt_free_align
-                0x87802148                __rt_ffs
- .text          0x878021b0      0x4f8 build\kernel\src\mem.o
-                0x87802250                rt_system_heap_init
-                0x878022e0                rt_malloc
-                0x8780246c                rt_calloc
-                0x87802498                rt_free
-                0x87802528                rt_realloc
-                0x87802670                rt_memory_info
- .text          0x878026a8      0x24c build\kernel\src\object.o
-                0x878026a8                rt_system_object_init
-                0x878026ac                rt_object_get_information
-                0x878026e8                rt_object_init
-                0x87802760                rt_object_detach
-                0x8780279c                rt_object_allocate
-                0x87802810                rt_object_delete
-                0x87802854                rt_object_is_systemobject
-                0x87802860                rt_object_get_type
-                0x8780286c                rt_object_find
- .text          0x878028f4      0x340 build\kernel\src\scheduler.o
-                0x878028f4                rt_system_scheduler_init
-                0x87802948                rt_schedule_insert_thread
-                0x878029d0                rt_schedule_remove_thread
-                0x87802a34                rt_system_scheduler_start
-                0x87802a80                rt_schedule
-                0x87802ba8                rt_enter_critical
-                0x87802bcc                rt_exit_critical
-                0x87802c24                rt_critical_level
- .text          0x87802c34      0x624 build\kernel\src\thread.o
-                0x87802c34                rt_thread_exit
-                0x87802cbc                rt_thread_timeout
-                0x87802cf4                rt_thread_init
-                0x87802dc8                rt_thread_self
-                0x87802dd8                rt_thread_detach
-                0x87802e58                rt_thread_create
-                0x87802f48                rt_thread_delete
-                0x87802fa0                rt_thread_yield
-                0x87802fb0                rt_thread_suspend
-                0x87803008                rt_thread_sleep
-                0x87803074                rt_thread_delay
-                0x87803078                rt_thread_mdelay
-                0x87803088                rt_thread_resume
-                0x878030f0                rt_thread_startup
-                0x87803134                rt_thread_control
-                0x878031c8                rt_thread_find
- .text          0x87803258      0x338 build\kernel\src\timer.o
-                0x8780327c                rt_timer_init
-                0x878032cc                rt_timer_detach
-                0x878032fc                rt_timer_create
-                0x87803350                rt_timer_delete
-                0x87803380                rt_timer_start
-                0x87803438                rt_timer_stop
-                0x87803480                rt_timer_control
-                0x878034d4                rt_timer_check
-                0x8780355c                rt_timer_next_timeout_tick
-                0x87803578                rt_system_timer_init
-                0x8780358c                rt_system_timer_thread_init
- .text          0x87803590       0xf8 build\kernel\components\libc\compilers\minilibc\stdlib.o
-                0x87803590                atoi
-                0x87803608                atol
-                0x87803678                malloc
-                0x8780367c                free
-                0x87803680                realloc
-                0x87803684                calloc
- .text          0x87803688      0x278 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb\libgcc.a(_udivsi3.o)
-                0x87803688                __aeabi_uidiv
-                0x87803688                __udivsi3
-                0x878038e4                __aeabi_uidivmod
- .text          0x87803900      0x2b0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb\libgcc.a(_divsi3.o)
-                0x87803900                __divsi3
-                0x87803900                __aeabi_idiv
-                0x87803b94                __aeabi_idivmod
- .text          0x87803bb0        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb\libgcc.a(_dvmd_tls.o)
-                0x87803bb0                __aeabi_idiv0
-                0x87803bb0                __aeabi_ldiv0
+                0x87800210                rt_tick_from_millisecond
+ .text          0x8780025c     0x1354 build\kernel\src\ipc.o
+                0x8780033c                rt_sem_init
+                0x87800374                rt_sem_detach
+                0x87800394                rt_sem_create
+                0x878003c8                rt_sem_delete
+                0x878003e8                rt_sem_take
+                0x87800494                rt_sem_trytake
+                0x8780049c                rt_sem_release
+                0x878004f4                rt_sem_control
+                0x87800538                rt_mutex_init
+                0x87800580                rt_mutex_detach
+                0x878005a0                rt_mutex_create
+                0x878005ec                rt_mutex_delete
+                0x8780060c                rt_mutex_take
+                0x87800730                rt_mutex_release
+                0x87800818                rt_mutex_control
+                0x87800820                rt_event_init
+                0x87800854                rt_event_detach
+                0x87800874                rt_event_create
+                0x878008a8                rt_event_delete
+                0x878008c8                rt_event_send
+                0x878009a8                rt_event_recv
+                0x87800ad4                rt_event_control
+                0x87800b18                rt_mb_init
+                0x87800b70                rt_mb_detach
+                0x87800b98                rt_mb_create
+                0x87800c1c                rt_mb_delete
+                0x87800c4c                rt_mb_send_wait
+                0x87800da8                rt_mb_send
+                0x87800db0                rt_mb_recv
+                0x87800f18                rt_mb_control
+                0x87800f6c                rt_mq_init
+                0x87801014                rt_mq_detach
+                0x8780103c                rt_mq_create
+                0x87801110                rt_mq_delete
+                0x87801140                rt_mq_send_wait
+                0x878012d8                rt_mq_send
+                0x878012e0                rt_mq_urgent
+                0x878013a0                rt_mq_recv
+                0x87801534                rt_mq_control
+ .text          0x878015b0       0x74 build\kernel\src\irq.o
+                0x878015b0                rt_interrupt_enter
+                0x878015d8                rt_interrupt_leave
+                0x87801600                rt_interrupt_get_nest
+ .text          0x87801624      0xba8 build\kernel\src\kservice.o
+                0x87801848                rt_get_errno
+                0x8780187c                rt_set_errno
+                0x878018b4                _rt_errno
+                0x878018e4                memset
+                0x878018e4                rt_memset
+                0x87801980                memcpy
+                0x87801980                rt_memcpy
+                0x87801a50                rt_memmove
+                0x87801a50                memmove
+                0x87801a9c                rt_memcmp
+                0x87801a9c                memcmp
+                0x87801acc                strcasecmp
+                0x87801acc                rt_strcasecmp
+                0x87801b1c                rt_strncpy
+                0x87801b54                rt_strncmp
+                0x87801b90                rt_strcmp
+                0x87801bc0                rt_strnlen
+                0x87801be8                rt_strlen
+                0x87801be8                strlen
+                0x87801c08                rt_strstr
+                0x87801c08                strstr
+                0x87801c74                strdup
+                0x87801c74                rt_strdup
+                0x87801ca8                rt_show_version
+                0x87801cac                rt_vsnprintf
+                0x878020b4                rt_snprintf
+                0x878020b4                snprintf
+                0x878020dc                rt_vsprintf
+                0x878020dc                vsprintf
+                0x878020ec                rt_sprintf
+                0x878020ec                sprintf
+                0x87802114                rt_malloc_align
+                0x8780215c                rt_free_align
+                0x87802164                __rt_ffs
+ .text          0x878021cc      0x50c build\kernel\src\mem.o
+                0x8780226c                rt_system_heap_init
+                0x878022fc                rt_malloc
+                0x87802488                rt_calloc
+                0x878024b4                rt_free
+                0x87802544                rt_realloc
+                0x878026a0                rt_memory_info
+ .text          0x878026d8      0x2d4 build\kernel\src\object.o
+                0x878026d8                rt_system_object_init
+                0x878026dc                rt_object_get_information
+                0x87802718                rt_object_get_length
+                0x87802754                rt_object_get_pointers
+                0x878027bc                rt_object_init
+                0x87802834                rt_object_detach
+                0x87802870                rt_object_allocate
+                0x878028e4                rt_object_delete
+                0x87802928                rt_object_is_systemobject
+                0x87802934                rt_object_get_type
+                0x87802940                rt_object_find
+ .text          0x878029ac      0x348 build\kernel\src\scheduler.o
+                0x878029ac                rt_system_scheduler_init
+                0x87802a00                rt_schedule_insert_thread
+                0x87802a88                rt_schedule_remove_thread
+                0x87802aec                rt_system_scheduler_start
+                0x87802b38                rt_schedule
+                0x87802c68                rt_enter_critical
+                0x87802c8c                rt_exit_critical
+                0x87802ce4                rt_critical_level
+ .text          0x87802cf4      0x6f0 build\kernel\src\thread.o
+                0x87802cf4                rt_thread_exit
+                0x87802d7c                rt_thread_timeout
+                0x87802db4                rt_thread_init
+                0x87802e88                rt_thread_self
+                0x87802e98                rt_thread_detach
+                0x87802f2c                rt_thread_create
+                0x8780301c                rt_thread_delete
+                0x87803088                rt_thread_yield
+                0x87803098                rt_thread_suspend
+                0x878030f0                rt_thread_sleep
+                0x8780315c                rt_thread_delay
+                0x87803160                rt_thread_mdelay
+                0x87803170                rt_thread_delay_until
+                0x87803214                rt_thread_resume
+                0x8780327c                rt_thread_startup
+                0x878032c0                rt_thread_control
+                0x87803354                rt_thread_find
+ .text          0x878033e4      0x35c build\kernel\src\timer.o
+                0x87803408                rt_timer_init
+                0x87803458                rt_timer_detach
+                0x87803488                rt_timer_create
+                0x878034dc                rt_timer_delete
+                0x8780350c                rt_timer_start
+                0x878035c4                rt_timer_stop
+                0x8780360c                rt_timer_control
+                0x87803674                rt_timer_check
+                0x878036fc                rt_timer_next_timeout_tick
+                0x87803728                rt_system_timer_init
+                0x8780373c                rt_system_timer_thread_init
+ .text          0x87803740       0xf8 build\kernel\components\libc\compilers\minilibc\stdlib.o
+                0x87803740                atoi
+                0x878037b8                atol
+                0x87803828                malloc
+                0x8780382c                free
+                0x87803830                realloc
+                0x87803834                calloc
+ .text          0x87803838      0x278 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb\libgcc.a(_udivsi3.o)
+                0x87803838                __aeabi_uidiv
+                0x87803838                __udivsi3
+                0x87803a94                __aeabi_uidivmod
+ .text          0x87803ab0      0x2b0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb\libgcc.a(_divsi3.o)
+                0x87803ab0                __divsi3
+                0x87803ab0                __aeabi_idiv
+                0x87803d44                __aeabi_idivmod
+ .text          0x87803d60        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb\libgcc.a(_dvmd_tls.o)
+                0x87803d60                __aeabi_idiv0
+                0x87803d60                __aeabi_ldiv0
  *(.text.*)
- .text.startup  0x87803bb4       0x28 build\applications\main.o
-                0x87803bb4                main
+ .text.startup  0x87803d64       0x28 build\applications\main.o
+                0x87803d64                main
  .text.startup.register_fini
-                0x87803bdc       0x18 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-__call_atexit.o)
- .text.atexit   0x87803bf4        0xc d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-atexit.o)
-                0x87803bf4                atexit
+                0x87803d8c       0x18 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-__call_atexit.o)
+ .text.atexit   0x87803da4        0xc d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-atexit.o)
+                0x87803da4                atexit
  .text.__libc_fini_array
-                0x87803c00       0x34 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-fini.o)
-                0x87803c00                __libc_fini_array
+                0x87803db0       0x34 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-fini.o)
+                0x87803db0                __libc_fini_array
  .text.__register_exitproc
-                0x87803c34       0xac d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-__atexit.o)
-                0x87803c34                __register_exitproc
+                0x87803de4       0xac d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-__atexit.o)
+                0x87803de4                __register_exitproc
  *(.fini)
- .fini          0x87803ce0        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crti.o
-                0x87803ce0                _fini
- .fini          0x87803ce4        0x8 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtn.o
-                0x87803cec                . = ALIGN (0x4)
-                0x87803cec                __fsymtab_start = .
+ .fini          0x87803e90        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crti.o
+                0x87803e90                _fini
+ .fini          0x87803e94        0x8 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtn.o
+                0x87803e9c                . = ALIGN (0x4)
+                0x87803e9c                __fsymtab_start = .
  *(FSymTab)
-                0x87803cec                __fsymtab_end = .
-                0x87803cec                . = ALIGN (0x4)
-                0x87803cec                __vsymtab_start = .
+                0x87803e9c                __fsymtab_end = .
+                0x87803e9c                . = ALIGN (0x4)
+                0x87803e9c                __vsymtab_start = .
  *(VSymTab)
-                0x87803cec                __vsymtab_end = .
-                0x87803cec                . = ALIGN (0x4)
-                0x87803cec                . = ALIGN (0x4)
-                0x87803cec                __rtmsymtab_start = .
+                0x87803e9c                __vsymtab_end = .
+                0x87803e9c                . = ALIGN (0x4)
+                0x87803e9c                . = ALIGN (0x4)
+                0x87803e9c                __rtmsymtab_start = .
  *(RTMSymTab)
-                0x87803cec                __rtmsymtab_end = .
-                0x87803cec                . = ALIGN (0x4)
-                0x87803cec                __rt_init_start = .
+                0x87803e9c                __rtmsymtab_end = .
+                0x87803e9c                . = ALIGN (0x4)
+                0x87803e9c                __rt_init_start = .
  *(SORT(.rti_fn*))
-                0x87803cec                __rt_init_end = .
-                0x87803cec                __text_end = .
-                0x87803cec                __rodata_start = .
+                0x87803e9c                __rt_init_end = .
+                0x87803e9c                __text_end = .
+                0x87803e9c                __rodata_start = .
 
-.glue_7         0x87803cec        0x0
- .glue_7        0x87803cec        0x0 linker stubs
+.glue_7         0x87803e9c        0x0
+ .glue_7        0x87803e9c        0x0 linker stubs
 
-.glue_7t        0x87803cec        0x0
- .glue_7t       0x87803cec        0x0 linker stubs
+.glue_7t        0x87803e9c        0x0
+ .glue_7t       0x87803e9c        0x0 linker stubs
 
-.vfp11_veneer   0x87803cec        0x0
- .vfp11_veneer  0x87803cec        0x0 linker stubs
+.vfp11_veneer   0x87803e9c        0x0
+ .vfp11_veneer  0x87803e9c        0x0 linker stubs
 
-.v4_bx          0x87803cec        0x0
- .v4_bx         0x87803cec        0x0 linker stubs
+.v4_bx          0x87803e9c        0x0
+ .v4_bx         0x87803e9c        0x0 linker stubs
 
-.init           0x87803cec        0x4
- .init          0x87803cec        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crti.o
-                0x87803cec                _init
+.init           0x87803e9c        0x4
+ .init          0x87803e9c        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crti.o
+                0x87803e9c                _init
 
-.iplt           0x87803cf0        0x0
- .iplt          0x87803cf0        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
+.iplt           0x87803ea0        0x0
+ .iplt          0x87803ea0        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
 
-.rodata         0x87803cf0      0x138
+.rodata         0x87803ea0      0x138
  *(.rodata)
- .rodata        0x87803cf0      0x128 build\kernel\src\kservice.o
-                0x87803d18                __lowest_bit_bitmap
+ .rodata        0x87803ea0      0x128 build\kernel\src\kservice.o
+                0x87803ec8                __lowest_bit_bitmap
  *(.rodata.*)
  .rodata.str1.1
-                0x87803e18        0x7 build\kernel\src\kservice.o
+                0x87803fc8        0x7 build\kernel\src\kservice.o
  .rodata.str1.1
-                0x87803e1f        0x5 build\kernel\src\mem.o
+                0x87803fcf        0x5 build\kernel\src\mem.o
  .rodata._global_impure_ptr
-                0x87803e24        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-impure.o)
-                0x87803e24                _global_impure_ptr
+                0x87803fd4        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-impure.o)
+                0x87803fd4                _global_impure_ptr
  *(.eh_frame)
- .eh_frame      0x87803e28        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
-                0x87803e28                __rodata_end = .
+ .eh_frame      0x87803fd8        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
+                0x87803fd8                __rodata_end = .
 
-.rel.dyn        0x87803e28        0x0
- .rel.iplt      0x87803e28        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
-                0x87803e28                . = ALIGN (0x4)
+.rel.dyn        0x87803fd8        0x0
+ .rel.iplt      0x87803fd8        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
+                0x87803fd8                . = ALIGN (0x4)
 
-.ctors          0x87803e28        0x0
+.ctors          0x87803fd8        0x0
                 [!provide]                PROVIDE (__ctors_start__, .)
  *crtbegin.o(.ctors)
  *crtbegin?.o(.ctors)
@@ -608,14 +604,14 @@ LOAD d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x87803e28                __exidx_start = .
+                0x87803fd8                __exidx_start = .
 
-ARM.exidx       0x87803e28        0x0
+ARM.exidx       0x87803fd8        0x0
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x87803e28                _sidata = .
-                0x87803e28                __exidx_end = .
+                0x87803fd8                _sidata = .
+                0x87803fd8                __exidx_end = .
 
-.dtors          0x87803e28        0x0
+.dtors          0x87803fd8        0x0
                 [!provide]                PROVIDE (__dtors_start__, .)
  *crtbegin.o(.dtors)
  *crtbegin?.o(.dtors)
@@ -623,68 +619,68 @@ ARM.exidx       0x87803e28        0x0
  *(SORT(.dtors.*))
  *(.dtors)
                 [!provide]                PROVIDE (__dtors_end__, .)
-                0x87803e28                . = ALIGN (0x8)
-                0x87803e28                __data_start = .
+                0x87803fd8                . = ALIGN (0x8)
+                0x87803fd8                __data_start = .
 
-.data           0x87803e28      0x4a8
+.data           0x87803fd8      0x4a8
  *(.data)
- .data          0x87803e28       0x70 build\kernel\src\object.o
+ .data          0x87803fd8       0x70 build\kernel\src\object.o
  *(.data.*)
  .data.impure_data
-                0x87803e98      0x428 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-impure.o)
-                0x878042c0                . = ALIGN (0x4)
-                0x878042c0                PROVIDE (__preinit_array_start, .)
+                0x87804048      0x428 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-impure.o)
+                0x87804470                . = ALIGN (0x4)
+                0x87804470                PROVIDE (__preinit_array_start, .)
  *(.preinit_array)
-                0x878042c0                PROVIDE (__preinit_array_end, .)
-                0x878042c0                . = ALIGN (0x4)
-                0x878042c0                PROVIDE (__init_array_start, .)
+                0x87804470                PROVIDE (__preinit_array_end, .)
+                0x87804470                . = ALIGN (0x4)
+                0x87804470                PROVIDE (__init_array_start, .)
  *(SORT(.init_array.*))
  .init_array.00000
-                0x878042c0        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-__call_atexit.o)
+                0x87804470        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-ar/thumb\libc.a(lib_a-__call_atexit.o)
  *(.init_array)
- .init_array    0x878042c4        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
-                0x878042c8                PROVIDE (__init_array_end, .)
-                0x878042c8                . = ALIGN (0x4)
-                0x878042c8                PROVIDE (__fini_array_start, .)
+ .init_array    0x87804474        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
+                0x87804478                PROVIDE (__init_array_end, .)
+                0x87804478                . = ALIGN (0x4)
+                0x87804478                PROVIDE (__fini_array_start, .)
  *(SORT(.fini_array.*))
  *(.fini_array)
- .fini_array    0x878042c8        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
-                0x878042cc                PROVIDE (__fini_array_end, .)
+ .fini_array    0x87804478        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
+                0x8780447c                PROVIDE (__fini_array_end, .)
  *(.jcr*)
- .jcr           0x878042cc        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
- .jcr           0x878042cc        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtend.o
-                0x878042d0                . = ALIGN (0x4)
+ .jcr           0x8780447c        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
+ .jcr           0x8780447c        0x4 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtend.o
+                0x87804480                . = ALIGN (0x4)
  *(.gnu.linkonce.d*)
-                0x878042d0                __data_end = .
+                0x87804480                __data_end = .
 
-.igot.plt       0x878042d0        0x0
- .igot.plt      0x878042d0        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
-                0x878042d0                . = ALIGN (0x8)
-                0x878042d0                __bss_start = .
+.igot.plt       0x87804480        0x0
+ .igot.plt      0x87804480        0x0 d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
+                0x87804480                . = ALIGN (0x8)
+                0x87804480                __bss_start = .
 
-.bss            0x878042d0      0x184
+.bss            0x87804480      0x184
  *(.bss)
- .bss           0x878042d0       0x1c d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
- .bss           0x878042ec        0x4 build\kernel\src\clock.o
- .bss           0x878042f0        0x1 build\kernel\src\irq.o
-                0x878042f0                rt_interrupt_nest
- *fill*         0x878042f1        0x3 
- .bss           0x878042f4        0x4 build\kernel\src\kservice.o
- .bss           0x878042f8       0x38 build\kernel\src\mem.o
- .bss           0x87804330        0x2 build\kernel\src\scheduler.o
- *fill*         0x87804332        0x2 
- .bss           0x87804334        0xc build\kernel\src\timer.o
+ .bss           0x87804480       0x1c d:/rtt/env/env_released_1.1.2.alpha/env/tools/gnu_gcc/arm_gcc/mingw/bin/../lib/gcc/arm-none-eabi/5.4.1/armv7-ar/thumb/crtbegin.o
+ .bss           0x8780449c        0x4 build\kernel\src\clock.o
+ .bss           0x878044a0        0x1 build\kernel\src\irq.o
+                0x878044a0                rt_interrupt_nest
+ *fill*         0x878044a1        0x3 
+ .bss           0x878044a4        0x4 build\kernel\src\kservice.o
+ .bss           0x878044a8       0x38 build\kernel\src\mem.o
+ .bss           0x878044e0        0x2 build\kernel\src\scheduler.o
+ *fill*         0x878044e2        0x2 
+ .bss           0x878044e4        0xc build\kernel\src\timer.o
  *(.bss.*)
  *(COMMON)
- COMMON         0x87804340      0x114 build\kernel\src\scheduler.o
-                0x87804340                rt_thread_priority_table
-                0x87804440                rt_current_priority
-                0x87804444                rt_current_thread
-                0x87804448                rt_thread_ready_priority_group
-                0x8780444c                rt_thread_defunct
-                0x87804454                . = ALIGN (0x4)
-                0x87804454                . = ALIGN (0x4)
-                0x87804454                __bss_end = .
+ COMMON         0x878044f0      0x114 build\kernel\src\scheduler.o
+                0x878044f0                rt_thread_priority_table
+                0x878045f0                rt_current_priority
+                0x878045f4                rt_current_thread
+                0x878045f8                rt_thread_ready_priority_group
+                0x878045fc                rt_thread_defunct
+                0x87804604                . = ALIGN (0x4)
+                0x87804604                . = ALIGN (0x4)
+                0x87804604                __bss_end = .
 
 .stab
  *(.stab)
@@ -1093,6 +1089,8 @@ rt_object_detach                                  build\kernel\src\object.o
 rt_object_find                                    build\kernel\src\object.o
 rt_object_get_information                         build\kernel\src\object.o
                                                   build\kernel\src\thread.o
+rt_object_get_length                              build\kernel\src\object.o
+rt_object_get_pointers                            build\kernel\src\object.o
 rt_object_get_type                                build\kernel\src\object.o
 rt_object_init                                    build\kernel\src\object.o
                                                   build\kernel\src\timer.o
@@ -1153,6 +1151,7 @@ rt_thread_defunct                                 build\kernel\src\scheduler.o
                                                   build\kernel\src\thread.o
                                                   build\kernel\src\idle.o
 rt_thread_delay                                   build\kernel\src\thread.o
+rt_thread_delay_until                             build\kernel\src\thread.o
 rt_thread_delete                                  build\kernel\src\thread.o
 rt_thread_detach                                  build\kernel\src\thread.o
 rt_thread_exit                                    build\kernel\src\thread.o
@@ -1184,6 +1183,7 @@ rt_tick_from_millisecond                          build\kernel\src\clock.o
 rt_tick_get                                       build\kernel\src\clock.o
                                                   build\kernel\components\libc\compilers\minilibc\time.o
                                                   build\kernel\src\timer.o
+                                                  build\kernel\src\thread.o
                                                   build\kernel\src\ipc.o
 rt_tick_increase                                  build\kernel\src\clock.o
 rt_tick_set                                       build\kernel\src\clock.o

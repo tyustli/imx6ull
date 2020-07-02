@@ -17,10 +17,6 @@
 #include <dfs_posix.h>
 #endif
 
-#ifdef RT_USING_PTHREADS
-#include <pthread.h>
-#endif
-
 #ifdef RT_USING_MODULE
 #include <dlmodule.h>
 #endif
@@ -441,4 +437,19 @@ void abort(void)
     }
 
     while (1);
+}
+
+uid_t getuid(void)
+{
+    return 0;
+}
+
+mode_t umask(mode_t mask)
+{
+    return 022;
+}
+
+int flock(int fd, int operation)
+{
+    return 0;
 }

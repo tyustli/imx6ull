@@ -116,10 +116,10 @@ int main(void)
     while (1) /* 死循环 				*/
     {
         led_off();  /* 关闭LED   			*/
-        delay(500); /* 延时大约500ms 		*/
+        delay(100); /* 延时大约500ms 		*/
 
         led_on();   /* 打开LED		 	*/
-        delay(500); /* 延时大约500ms 		*/
+        delay(100); /* 延时大约500ms 		*/
     }
 
     return 0;
