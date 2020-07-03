@@ -1,0 +1,13 @@
+from building import *
+
+cwd = GetCurrentDir()
+src = Split("""
+
+""")
+
+path = [cwd,
+        cwd + '/drivers']
+
+group = DefineGroup('libraries', src, depend = [''], CPPPATH = path)
+
+Return('group')
