@@ -132,5 +132,6 @@
 
 /* Board extended module Drivers */
 
+#include "rtconfig_project.h"
 
 #endif

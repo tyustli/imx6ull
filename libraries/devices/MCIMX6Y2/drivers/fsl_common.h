@@ -31,17 +31,19 @@
 #ifndef _FSL_COMMON_H_
 #define _FSL_COMMON_H_
 
-#include <assert.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
+// #include <assert.h>
+// #include <stdbool.h>
+// #include <stdint.h>
+// #include <string.h>
+// #include <stdlib.h>
 
-#if defined(__ICCARM__)
-#include <stddef.h>
-#endif
+#include "MCIMX6Y2.H"
 
-#include "fsl_device_registers.h"
+// #if defined(__ICCARM__)
+// #include <stddef.h>
+// #endif
+
+// #include "fsl_device_registers.h"
 
 /*!
  * @addtogroup ksdk_common
@@ -153,7 +155,7 @@ typedef int32_t status_t;
  * The fsl_clock.h is included here because it needs MAKE_VERSION/MAKE_STATUS/status_t
  * defined in previous of this file.
  */
-#include "fsl_clock.h"
+// #include "fsl_clock.h"
 
 /*
  * Chip level peripheral reset API, for MCUs that implement peripheral reset control external to a peripheral
@@ -331,27 +333,27 @@ void SDK_Free(void *ptr);
      * @retval kStatus_Success Interrupt enabled successfully
      * @retval kStatus_Fail Failed to enable the interrupt
      */
-    static inline status_t EnableIRQ(IRQn_Type interrupt)
-    {
-        if (NotAvail_IRQn == interrupt)
-        {
-            return kStatus_Fail;
-        }
+//     static inline status_t EnableIRQ(IRQn_Type interrupt)
+//     {
+//         if (NotAvail_IRQn == interrupt)
+//         {
+//             return kStatus_Fail;
+//         }
 
-#if defined(FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS) && (FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS > 0)
-        if (interrupt >= FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS)
-        {
-            return kStatus_Fail;
-        }
-#endif
+// #if defined(FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS) && (FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS > 0)
+//         if (interrupt >= FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS)
+//         {
+//             return kStatus_Fail;
+//         }
+// #endif
 
-#if defined(__GIC_PRIO_BITS)
-        GIC_EnableIRQ(interrupt);
-#else
-    NVIC_EnableIRQ(interrupt);
-#endif
-        return kStatus_Success;
-    }
+// #if defined(__GIC_PRIO_BITS)
+//         GIC_EnableIRQ(interrupt);
+// #else
+//     NVIC_EnableIRQ(interrupt);
+// #endif
+//         return kStatus_Success;
+//     }
 
     /*!
      * @brief Disable specific interrupt.
@@ -369,27 +371,27 @@ void SDK_Free(void *ptr);
      * @retval kStatus_Success Interrupt disabled successfully
      * @retval kStatus_Fail Failed to disable the interrupt
      */
-    static inline status_t DisableIRQ(IRQn_Type interrupt)
-    {
-        if (NotAvail_IRQn == interrupt)
-        {
-            return kStatus_Fail;
-        }
+//     static inline status_t DisableIRQ(IRQn_Type interrupt)
+//     {
+//         if (NotAvail_IRQn == interrupt)
+//         {
+//             return kStatus_Fail;
+//         }
 
-#if defined(FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS) && (FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS > 0)
-        if (interrupt >= FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS)
-        {
-            return kStatus_Fail;
-        }
-#endif
+// #if defined(FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS) && (FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS > 0)
+//         if (interrupt >= FSL_FEATURE_NUMBER_OF_LEVEL1_INT_VECTORS)
+//         {
+//             return kStatus_Fail;
+//         }
+// #endif
 
-#if defined(__GIC_PRIO_BITS)
-        GIC_DisableIRQ(interrupt);
-#else
-    NVIC_DisableIRQ(interrupt);
-#endif
-        return kStatus_Success;
-    }
+// #if defined(__GIC_PRIO_BITS)
+//         GIC_DisableIRQ(interrupt);
+// #else
+//     NVIC_DisableIRQ(interrupt);
+// #endif
+//         return kStatus_Success;
+//     }
 
     /*!
      * @brief Disable the global IRQ
@@ -399,22 +401,22 @@ void SDK_Free(void *ptr);
      *
      * @return Current primask value.
      */
-    static inline uint32_t DisableGlobalIRQ(void)
-    {
-#if defined(CPSR_I_Msk)
-        uint32_t cpsr = __get_CPSR() & CPSR_I_Msk;
+//     static inline uint32_t DisableGlobalIRQ(void)
+//     {
+// #if defined(CPSR_I_Msk)
+//         uint32_t cpsr = __get_CPSR() & CPSR_I_Msk;
 
-        __disable_irq();
+//         __disable_irq();
 
-        return cpsr;
-#else
-    uint32_t regPrimask = __get_PRIMASK();
+//         return cpsr;
+// #else
+//     uint32_t regPrimask = __get_PRIMASK();
 
-    __disable_irq();
+//     __disable_irq();
 
-    return regPrimask;
-#endif
-    }
+//     return regPrimask;
+// #endif
+//     }
 
     /*!
      * @brief Enaable the global IRQ
@@ -426,14 +428,14 @@ void SDK_Free(void *ptr);
      * @param primask value of primask register to be restored. The primask value is supposed to be provided by the
      * DisableGlobalIRQ().
      */
-    static inline void EnableGlobalIRQ(uint32_t primask)
-    {
-#if defined(CPSR_I_Msk)
-        __set_CPSR((__get_CPSR() & ~CPSR_I_Msk) | primask);
-#else
-    __set_PRIMASK(primask);
-#endif
-    }
+//     inline void EnableGlobalIRQ(uint32_t primask)
+//     {
+// #if defined(CPSR_I_Msk)
+//         __set_CPSR((__get_CPSR() & ~CPSR_I_Msk) | primask);
+// #else
+//     __set_PRIMASK(primask);
+// #endif
+//     }
 
     /*!
      * @brief install IRQ handler
