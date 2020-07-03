@@ -1,12 +1,68 @@
 menu "Hardware Drivers Config"
 
+config SOC_IMX6ULL
+    bool
+    select RT_USING_COMPONENTS_INIT
+    select RT_USING_USER_MAIN
+    default y
+
 menu "Onboard Peripheral Drivers"
+
 endmenu
 
 menu "On-chip Peripheral Drivers"
+
 endmenu
 
 menu "Board extended module Drivers"
+
+    config BSP_USING_GPIO
+        bool "Enable GPIO"
+        select RT_USING_PIN
+        default n
+
+    menuconfig BSP_USING_UART
+        bool "Enable UART"
+        select RT_USING_SERIAL
+        default n
+        if BSP_USING_UART
+            config BSP_USING_UART1
+            bool "Enable UART1"
+            default n
+
+            config BSP_USING_UART2
+            bool "Enable UART2"
+            default n
+        endif
+
+    menuconfig BSP_USING_I2C
+        bool "Enable I2C BUS"
+        default n
+        select RT_USING_I2C
+        if BSP_USING_I2C
+            config BSP_USING_I2C1
+                bool "Enable I2C1 BUS"
+                default n
+
+            config BSP_USING_I2C2
+                bool "Enable I2C2 BUS"
+                default n
+        endif
+
+    menuconfig BSP_USING_SPI
+        bool "Enable SPI BUS"
+        default n
+        select RT_USING_SPI
+        if BSP_USING_SPI
+            config BSP_USING_SPI1
+                bool "Enable SPI1 BUS"
+                default n
+
+            config BSP_USING_SPI2
+                bool "Enable SPI2 BUS"
+                default n
+        endif
+
 endmenu
 
 endmenu

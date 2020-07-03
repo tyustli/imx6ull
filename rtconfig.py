@@ -8,14 +8,14 @@ CROSS_TOOL  ='gcc'
 if os.getenv('RTT_ROOT'):
     RTT_ROOT = os.getenv('RTT_ROOT')
 else:
-    RTT_ROOT = '../..'
+    RTT_ROOT = './'
 
 if os.getenv('RTT_CC'):
     CROSS_TOOL = os.getenv('RTT_CC')
 
 if  CROSS_TOOL == 'gcc':
     PLATFORM    = 'gcc'
-    EXEC_PATH   = '/usr/bin'
+    EXEC_PATH   = '/opt/gcc-arm-none-eabi-6_2-2016q4/bin'
 else:
     print('Please make sure your toolchains is GNU GCC!')
     exit(0)

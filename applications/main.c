@@ -114,10 +114,10 @@ int main(int argc, char *argv[])
     while (1)
     {
         led_off();
-        delay(500);
+        delay(100);
 
         led_on();
-        delay(500);
+        delay(100);
     }
 
     return 0;

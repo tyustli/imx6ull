@@ -23,15 +23,19 @@
 
 /* Memory Management */
 
-#define RT_USING_SMALL_MEM
-#define RT_USING_HEAP
+#define RT_USING_NOHEAP
 
 /* Kernel Device Object */
 
-#define RT_VER_NUM 0x40002
+#define RT_USING_DEVICE
+#define RT_VER_NUM 0x40003
 
 /* RT-Thread Components */
 
+#define RT_USING_COMPONENTS_INIT
+#define RT_USING_USER_MAIN
+#define RT_MAIN_THREAD_STACK_SIZE 2048
+#define RT_MAIN_THREAD_PRIORITY 10
 
 /* C++ features */
 
@@ -119,6 +123,8 @@
 
 
 /* Hardware Drivers Config */
+
+#define SOC_IMX6ULL
 
 /* Onboard Peripheral Drivers */
 
