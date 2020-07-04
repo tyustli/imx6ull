@@ -124,14 +124,12 @@
 
 /* Hardware Drivers Config */
 
-#define SOC_IMX6ULL
+#define CPU_MCIMX6Y2CVM05
 
 /* Onboard Peripheral Drivers */
 
 /* On-chip Peripheral Drivers */
 
 /* Board extended module Drivers */
-
-#include "rtconfig_project.h"
 
 #endif

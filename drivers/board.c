@@ -10,9 +10,7 @@
 
 #include <rthw.h>
 #include <rtthread.h>
-#include "fsl_common.h"
-#include "fsl_iomuxc.h"
-#include "MCIMX6Y2.h"
+#include "board.h"
 
 void rt_hw_board_init(void)
 {

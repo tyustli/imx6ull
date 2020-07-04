@@ -10,6 +10,9 @@
 
 #ifndef _BOARD_H_
 #define _BOARD_H_
+#include "fsl_common.h"
+#include "fsl_iomuxc.h"
+#include "MCIMX6Y2.h"
 
 void rt_hw_board_init(void);
 

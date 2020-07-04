@@ -69,8 +69,6 @@
 #ifndef _MCIMX6Y2_H_
 #define _MCIMX6Y2_H_                             /**< Symbol preventing repeated inclusion */
 
-#include <rtthread.h>
-
 /** Memory map major version (memory maps with equal major version number are
  * compatible) */
 #define MCU_MEM_MAP_VERSION 0x0300U
@@ -268,8 +266,8 @@ typedef enum IRQn {
 #define __GIC_PRIO_BITS                5         /**< Number of Bits used for Priority Levels */
 #define __FPU_PRESENT                  1         /**< FPU present or not */
 
-// #include "core_ca7.h"                  /* Core Peripheral Access Layer */
-// #include "system_MCIMX6Y2.h"           /* Device specific configuration file */
+#include "core_ca7.h"                  /* Core Peripheral Access Layer */
+#include "system_MCIMX6Y2.h"           /* Device specific configuration file */
 
 /*!
  * @}
