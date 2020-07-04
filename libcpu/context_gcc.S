@@ -5,10 +5,15 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2020-07-02     tyustli   first version
+ * 2013-07-05     Bernard      the first version
  */
 
 .section .text, "ax"
+
+#ifdef RT_USING_SMP
+#define rt_hw_interrupt_disable rt_hw_local_irq_disable
+#define rt_hw_interrupt_enable  rt_hw_local_irq_enable
+#endif
 
 /*
  * rt_base_t rt_hw_interrupt_disable();
@@ -35,6 +40,11 @@ rt_hw_interrupt_enable:
 .globl rt_hw_context_switch_to
 rt_hw_context_switch_to:
     ldr sp, [r0]            @ get new task stack pointer
+
+#ifdef RT_USING_SMP
+    mov     r0, r1
+    bl      rt_cpus_lock_status_restore
+#endif /*RT_USING_SMP*/
     b       rt_hw_context_switch_exit
 
 .section .bss.share.isr
@@ -61,9 +71,30 @@ rt_hw_context_switch:
 
     stmfd sp!, {r4}         @ push cpsr
 
+#ifdef RT_USING_LWP
+    stmfd sp, {r13, r14}^   @ push usr_sp usr_lr
+    sub sp, #8
+#endif
+#ifdef RT_USING_FPU
+    /* fpu context */
+    vmrs r6, fpexc
+    tst  r6, #(1<<30)
+    beq 1f
+    vstmdb sp!, {d0-d15}
+    vstmdb sp!, {d16-d31}
+    vmrs r5, fpscr
+    stmfd sp!, {r5}
+1:
+    stmfd sp!, {r6}
+#endif
+
     str sp, [r0]            @ store sp in preempted tasks TCB
     ldr sp, [r1]            @ get new task stack pointer
 
+#ifdef RT_USING_SMP
+    mov     r0, r2
+    bl      rt_cpus_lock_status_restore
+#endif /*RT_USING_SMP*/
     b       rt_hw_context_switch_exit
 
 /*
@@ -85,6 +116,22 @@ rt_hw_context_switch:
 .globl rt_interrupt_to_thread
 .globl rt_hw_context_switch_interrupt
 rt_hw_context_switch_interrupt:
+#ifdef RT_USING_SMP
+    /* r0 :svc_mod context
+     * r1 :addr of from_thread's sp
+     * r2 :addr of to_thread's sp
+     * r3 :to_thread's tcb
+     */
+
+    str     r0, [r1]
+
+    ldr     sp, [r2]
+    mov     r0, r3
+    bl      rt_cpus_lock_status_restore
+
+    b       rt_hw_context_switch_exit
+
+#else /*RT_USING_SMP*/
     ldr r2, =rt_thread_switch_interrupt_flag
     ldr r3, [r2]
     cmp r3, #1
@@ -97,9 +144,37 @@ _reswitch:
     ldr r2, =rt_interrupt_to_thread     @ set rt_interrupt_to_thread
     str r1, [r2]
     bx  lr
+#endif /*RT_USING_SMP*/
 
 .global rt_hw_context_switch_exit
 rt_hw_context_switch_exit:
+
+#ifdef RT_USING_SMP
+#ifdef RT_USING_SIGNALS
+    mov     r0, sp
+    cps #Mode_IRQ
+    bl      rt_signal_check
+    cps #Mode_SVC
+    mov     sp, r0
+#endif
+#endif
+#ifdef RT_USING_FPU
+/* fpu context */
+    ldmfd sp!, {r6}
+    vmsr fpexc, r6
+    tst  r6, #(1<<30)
+    beq 1f
+    ldmfd sp!, {r5}
+    vmsr fpscr, r5
+    vldmia sp!, {d16-d31}
+    vldmia sp!, {d0-d15}
+1:
+#endif
+
+#ifdef RT_USING_LWP
+    ldmfd   sp, {r13, r14}^ /* usr_sp, usr_lr */
+    add     sp, #8
+#endif
     ldmfd   sp!, {r1}
     msr     spsr_cxsf, r1        /* original mode */
     ldmfd   sp!, {r0-r12,lr,pc}^ /* irq return */
