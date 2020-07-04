@@ -10,17 +10,19 @@
 
 #include <rthw.h>
 #include <rtthread.h>
+#include "board.h"
+
 /* Those varibles will be accessed in ISR, so we need to share them. */
 rt_uint32_t rt_interrupt_from_thread = 0;
 rt_uint32_t rt_interrupt_to_thread = 0;
 rt_uint32_t rt_thread_switch_interrupt_flag = 0;
 
-void rt_hw_trap_fiq()
+void rt_hw_trap_fiq(unsigned int giccIar)
 {
-
+    SystemIrqHandler(giccIar);
 }
 
-void rt_hw_trap_irq(void)
+void rt_hw_trap_irq(unsigned int giccIar)
 {
-    
+    SystemIrqHandler(giccIar);
 }
