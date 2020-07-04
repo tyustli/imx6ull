@@ -118,7 +118,7 @@ SECTIONS
     }
     __data_end = .;
 
-    . = ALIGN(8);
+    . = ALIGN(4);
     __bss_start = .;
     .bss       :
     {

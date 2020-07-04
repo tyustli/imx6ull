@@ -201,10 +201,10 @@ int main(int argc, char *argv[])
     while (1)
     {
         led_off();
-        delay(100);
+        delay(500);
 
         led_on();
-        delay(100);
+        delay(500);
     }
 
     return 0;

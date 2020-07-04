@@ -97,9 +97,22 @@ reset:
     msr cpsr, r0        /* 将r0 的数据写入到cpsr_c中                    */
     ldr sp, =0X80200000 /* 设置SVC模式下的栈首地址为0X80200000,大小为2MB */
 
+    /* clear bss */
+    mov     r0, #0
+    ldr     r1, =__bss_start
+    ldr     r2, =__bss_end
+
+bss_clear_loop:
+    cmp     r1, r2
+    strlo   r0, [r1], #4
+    blo     bss_clear_loop
+
     cpsie i             /* 打开全局中断  */
 
-    b main              /* 跳转到main函数  */
+    /* start RT-Thread Kernel */
+    ldr     pc, _rtthread_startup
+_rtthread_startup:
+    .word  main
 
     /* 中断 */
     .align  5
