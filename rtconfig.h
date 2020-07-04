@@ -124,12 +124,13 @@
 
 /* Hardware Drivers Config */
 
-#define CPU_MCIMX6Y2CVM05
+#define SOC_IMX6ULL
 
 /* Onboard Peripheral Drivers */
 
 /* On-chip Peripheral Drivers */
 
 /* Board extended module Drivers */
+
 
 #endif

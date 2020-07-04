@@ -2,7 +2,7 @@ from building import *
 
 cwd = GetCurrentDir()
 src = Split("""
-
+system_MCIMX6Y2.c
 """)
 
 path = [cwd,

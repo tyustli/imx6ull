@@ -1,6 +1,6 @@
 menu "Hardware Drivers Config"
 
-config CPU_MCIMX6Y2CVM05
+config SOC_IMX6ULL
     bool
     select RT_USING_COMPONENTS_INIT
     select RT_USING_USER_MAIN

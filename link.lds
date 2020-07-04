@@ -9,7 +9,9 @@ SECTIONS
     __text_start = .;
     .text :
     {
-        *(.vectors)
+        __VECTOR_TABLE = .;
+        . = ALIGN(4);
+        KEEP(*(.vectors))
         *(.text)
         *(.text.*)
         KEEP(*(.fini))
