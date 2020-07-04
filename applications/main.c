@@ -193,16 +193,70 @@ void delay(volatile unsigned int n)
     }
 }
 
+#define THREAD_PRIORITY 10
+#define THREAD_TIMESLICE 10
+
+static char thread1_stack[1024];
+static char thread2_stack[1024];
+
+static struct rt_thread thread1;
+static struct rt_thread thread2;
+
+static void thread2_entry(void *parameter)
+{
+    while(1)
+    {
+        delay(500);
+        led_off();
+    }
+}
+
+static void thread1_entry(void *parameter)
+{
+    while(1)
+    {
+        delay(500);
+        led_on();
+    }
+}
+
+static int test_led_schedule(void)
+{
+    rt_thread_init(&thread1,
+                   "thread1",
+                   thread1_entry,
+                   RT_NULL,
+                   &thread1_stack[0],
+                   sizeof(thread1_stack),
+                   THREAD_PRIORITY,
+                   THREAD_TIMESLICE);
+
+    rt_thread_startup(&thread1);
+
+    rt_thread_init(&thread2,
+                   "thread2",
+                   thread2_entry,
+                   RT_NULL,
+                   &thread2_stack[0],
+                   sizeof(thread2_stack),
+                   THREAD_PRIORITY,
+                   THREAD_TIMESLICE);
+
+    rt_thread_startup(&thread2);
+
+    return 0;
+}
+
+
 int main(int argc, char *argv[])
 {
     clk_enable();
     led_init();
 
-    while (1)
+    while(1)
     {
         led_off();
         delay(500);
-
         led_on();
         delay(500);
     }
