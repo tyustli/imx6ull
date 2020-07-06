@@ -254,6 +254,12 @@ int main(int argc, char *argv[])
 {
     clk_enable();
     led_init();
-
+    while(1)
+    {
+        led_on();
+        rt_thread_mdelay(100);
+        led_off();
+        rt_thread_mdelay(100);
+    }
     return 0;
 }

@@ -16,23 +16,6 @@
 #include "drv_uart.h"
 #endif
 
-#define LED0 0
-#define ON 1
-#define OFF 0
-
-static void led_switch(int led, int status)
-{
-    switch (led)
-    {
-    case LED0:
-        if (status == ON)
-            GPIO1->DR &= ~(1 << 3); /* 打开LED0 */
-        else if (status == OFF)
-            GPIO1->DR |= (1 << 3); /* 关闭LED0 */
-        break;
-    }
-}
-
 static void epit1_irqhandler(void)
 {
     static unsigned char state = 0;
@@ -40,7 +23,7 @@ static void epit1_irqhandler(void)
     state = !state;
     if (EPIT1->SR & (1 << 0)) /* 判断比较事件发生 */
     {
-        led_switch(LED0, state); /* 定时器周期到，反转LED */
+        rt_tick_increase();
     }
 
     EPIT1->SR |= 1 << 0; /* 清除中断标志位 */
@@ -79,7 +62,7 @@ static void epit1_init(unsigned int frac, unsigned int value)
 void rt_hw_board_init(void)
 {
     SystemInitIrqTable();
-    epit1_init(0, 66000000 / 2);
+    epit1_init(0, 660000 / 2);
 
     /* Heap initialization */
 #if defined(RT_USING_HEAP)
