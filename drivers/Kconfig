@@ -23,7 +23,6 @@ menu "Board extended module Drivers"
 
     menuconfig BSP_USING_UART
         bool "Enable UART"
-        select RT_USING_SERIAL
         default n
         if BSP_USING_UART
             config BSP_USING_UART1
