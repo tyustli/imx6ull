@@ -19,6 +19,32 @@
 .equ I_Bit,           0x80            @ when I bit is set, IRQ is disabled
 .equ F_Bit,           0x40            @ when F bit is set, FIQ is disabled
 
+#ifdef RT_USING_FPU
+.equ UND_Stack_Size,     0x00000400
+#else
+.equ UND_Stack_Size,     0x00000000
+#endif
+.equ SVC_Stack_Size,     0x00000400
+.equ ABT_Stack_Size,     0x00000000
+.equ RT_FIQ_STACK_PGSZ,  0x00000000
+.equ RT_IRQ_STACK_PGSZ,  0x00000800
+.equ USR_Stack_Size,     0x00000400
+
+#define ISR_Stack_Size  (UND_Stack_Size + SVC_Stack_Size + ABT_Stack_Size + \
+                 RT_FIQ_STACK_PGSZ + RT_IRQ_STACK_PGSZ)
+
+.section .data.share.isr
+/* stack */
+.globl stack_start
+.globl stack_top
+
+.align 3
+stack_start:
+.rept ISR_Stack_Size
+.byte 0
+.endr
+stack_top:
+
  /*
  * 中断向量表
  */
@@ -74,31 +100,8 @@ reset:
     bic     r0,  r0, #0x1             /* 清除C1寄存器的bit0(M位)，关闭MMU                       */
     mcr     p15, 0, r0, c1, c0, 0     /* 将r0寄存器中的值写入到CP15的C1寄存器中                  */
 
-    /* 设置各个模式下的栈指针，
-    * 注意：IMX6UL的堆栈是向下增长的！
-    * 堆栈指针地址一定要是4字节地址对齐的！！！
-    * DDR范围:0X80000000~0X9FFFFFFF
-    */
-    /* 进入IRQ模式 */
-    mrs r0, cpsr
-    bic r0, r0, #0x1f   /* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4          */
-    orr r0, r0, #0x12   /* r0或上0x13,表示使用IRQ模式                         */
-    msr cpsr, r0        /* 将r0 的数据写入到cpsr_c中                          */
-    ldr sp, =0x80600000 /* 设置IRQ模式下的栈首地址为0X80600000,大小为2MB       */
-
-    /* 进入SYS模式 */
-    mrs r0, cpsr
-    bic r0, r0, #0x1f   /* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4        */
-    orr r0, r0, #0x1f   /* r0或上0x13,表示使用SYS模式                       */
-    msr cpsr, r0        /* 将r0 的数据写入到cpsr_c中                        */
-    ldr sp, =0x80400000 /* 设置SYS模式下的栈首地址为0X80400000,大小为2MB     */
-
-    /* 进入SVC模式 */
-    mrs r0, cpsr
-    bic r0, r0, #0x1f   /* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4    */
-    orr r0, r0, #0x13   /* r0或上0x13,表示使用SVC模式                   */
-    msr cpsr, r0        /* 将r0 的数据写入到cpsr_c中                    */
-    ldr sp, =0X80200000 /* 设置SVC模式下的栈首地址为0X80200000,大小为2MB */
+    /* setup stack */
+    bl      stack_setup
 
     /* clear bss */
     mov     r0, #0
@@ -119,6 +122,36 @@ bss_clear_loop:
     ldr     pc, _rtthread_startup
 _rtthread_startup:
     .word  entry
+
+stack_setup:
+    ldr     r0, =stack_top
+
+    @  Set the startup stack for svc
+    mov     sp, r0
+
+    @  Enter Undefined Instruction Mode and set its Stack Pointer
+    msr     cpsr_c, #Mode_UND|I_Bit|F_Bit
+    mov     sp, r0
+    sub     r0, r0, #UND_Stack_Size
+
+    @  Enter Abort Mode and set its Stack Pointer
+    msr     cpsr_c, #Mode_ABT|I_Bit|F_Bit
+    mov     sp, r0
+    sub     r0, r0, #ABT_Stack_Size
+
+    @  Enter FIQ Mode and set its Stack Pointer
+    msr     cpsr_c, #Mode_FIQ|I_Bit|F_Bit
+    mov     sp, r0
+    sub     r0, r0, #RT_FIQ_STACK_PGSZ
+
+    @  Enter IRQ Mode and set its Stack Pointer
+    msr     cpsr_c, #Mode_IRQ|I_Bit|F_Bit
+    mov     sp, r0
+    sub     r0, r0, #RT_IRQ_STACK_PGSZ
+
+    /* come back to SVC mode */
+    msr     cpsr_c, #Mode_SVC|I_Bit|F_Bit
+    bx      lr
 
     /* 中断 */
     .align  5
