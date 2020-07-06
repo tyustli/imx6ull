@@ -14,6 +14,10 @@
 #include "fsl_iomuxc.h"
 #include "MCIMX6Y2.h"
 
+extern unsigned char __bss_end;
+#define HEAP_BEGIN    (void*)&__bss_end
+#define HEAP_END      (void*)( 0x80000000 + 256 * 1024 * 1024)
+
 void rt_hw_board_init(void);
 
 #endif

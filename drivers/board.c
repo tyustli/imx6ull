@@ -127,4 +127,10 @@ void rt_hw_board_init(void)
     clk_enable();
     led_init();
     epit1_init(0, 66000000 / 2);
+
+    /* Heap initialization */
+#if defined(RT_USING_HEAP)
+    rt_system_heap_init((void *)HEAP_BEGIN, (void *)HEAP_END);
+#endif
+
 }

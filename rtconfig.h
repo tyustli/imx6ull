@@ -23,7 +23,10 @@
 
 /* Memory Management */
 
-#define RT_USING_NOHEAP
+#define RT_USING_MEMPOOL
+#define RT_USING_MEMHEAP
+#define RT_USING_SMALL_MEM
+#define RT_USING_HEAP
 
 /* Kernel Device Object */
 
