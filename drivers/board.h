@@ -16,7 +16,7 @@
 
 extern unsigned char __bss_end;
 #define HEAP_BEGIN    (void*)&__bss_end
-#define HEAP_END      (void*)( 0x80000000 + 256 * 1024 * 1024)
+#define HEAP_END      (void*)( 0x80000000 + 512 * 1024 * 1024)
 
 void rt_hw_board_init(void);
 
