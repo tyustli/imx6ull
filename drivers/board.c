@@ -18,9 +18,6 @@
 
 static void epit1_irqhandler(void)
 {
-    static unsigned char state = 0;
-
-    state = !state;
     if (EPIT1->SR & (1 << 0)) /* 判断比较事件发生 */
     {
         rt_tick_increase();

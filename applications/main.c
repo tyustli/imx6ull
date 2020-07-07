@@ -177,79 +177,6 @@ void led_off(void)
     GPIO1->DR |= (1 << 3);
 }
 
-void delay_short(volatile unsigned int n)
-{
-    while (n--)
-    {
-    }
-}
-
-void delay(volatile unsigned int n)
-{
-    while (n--)
-    {
-        delay_short(0x7ff);
-    }
-}
-
-#define THREAD_PRIORITY 10
-#define THREAD_TIMESLICE 10
-
-static char thread1_stack[1024];
-static char thread2_stack[1024];
-
-static struct rt_thread thread1;
-static struct rt_thread thread2;
-
-extern void led_on(void);
-extern void led_off(void);
-
-static void thread2_entry(void *parameter)
-{
-    while(1)
-    {
-        delay(500);
-        led_off();
-    }
-}
-
-static void thread1_entry(void *parameter)
-{
-    while(1)
-    {
-        delay(500);
-        led_on();
-    }
-}
-
-int test_led_schedule(void)
-{
-    rt_thread_init(&thread1,
-                   "thread1",
-                   thread1_entry,
-                   RT_NULL,
-                   &thread1_stack[0],
-                   sizeof(thread1_stack),
-                   THREAD_PRIORITY,
-                   THREAD_TIMESLICE);
-
-    rt_thread_startup(&thread1);
-
-    rt_thread_init(&thread2,
-                   "thread2",
-                   thread2_entry,
-                   RT_NULL,
-                   &thread2_stack[0],
-                   sizeof(thread2_stack),
-                   THREAD_PRIORITY,
-                   THREAD_TIMESLICE);
-
-    rt_thread_startup(&thread2);
-
-    return 0;
-}
-
-
 int main(int argc, char *argv[])
 {
     clk_enable();
@@ -260,7 +187,6 @@ int main(int argc, char *argv[])
         rt_thread_mdelay(500);
         led_off();
         rt_thread_mdelay(500);
-        rt_kprintf("1\r\n");
     }
     return 0;
 }
