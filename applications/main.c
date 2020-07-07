@@ -257,9 +257,10 @@ int main(int argc, char *argv[])
     while(1)
     {
         led_on();
-        rt_thread_mdelay(100);
+        rt_thread_mdelay(500);
         led_off();
-        rt_thread_mdelay(100);
+        rt_thread_mdelay(500);
+        rt_kprintf("1\r\n");
     }
     return 0;
 }

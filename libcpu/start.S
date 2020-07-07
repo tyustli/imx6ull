@@ -87,21 +87,25 @@ _vector_fiq:
     .section .text
     .global reset
 reset:
-    cpsid i                                 /* 关闭全局中断 */
+    cpsid   i               /* Mask interrupts */
 
-    /* 关闭I,DCache和MMU 
-    * 采取读-改-写的方式。
-    */
-    mrc     p15, 0, r0, c1, c0, 0     /* 读取CP15的C1寄存器到R0中                                */
-    bic     r0,  r0, #(0x1 << 12)     /* 清除C1寄存器的bit12位(I位)，关闭I Cache                 */
-    bic     r0,  r0, #(0x1 <<  2)     /* 清除C1寄存器的bit2(C位)，关闭D Cache                    */
-    bic     r0,  r0, #0x2             /* 清除C1寄存器的bit1(A位)，关闭对齐                       */
-    bic     r0,  r0, #(0x1 << 11)     /* 清除C1寄存器的bit11(Z位)，关闭分支预测                  */
-    bic     r0,  r0, #0x1             /* 清除C1寄存器的bit0(M位)，关闭MMU                       */
-    mcr     p15, 0, r0, c1, c0, 0     /* 将r0寄存器中的值写入到CP15的C1寄存器中                  */
+    /* Reset SCTlr Settings */
+    mrc     p15, 0, r0, c1, c0, 0     /* Read CP15 System Control register                  */
+    bic     r0,  r0, #(0x1 << 12)     /* Clear I bit 12 to disable I Cache                  */
+    bic     r0,  r0, #(0x1 <<  2)     /* Clear C bit  2 to disable D Cache                  */
+    bic     r0,  r0, #0x2             /* Clear A bit  1 to disable strict alignment         */
+    bic     r0,  r0, #(0x1 << 11)     /* Clear Z bit 11 to disable branch prediction        */
+    bic     r0,  r0, #0x1             /* Clear M bit  0 to disable MMU                      */
+    mcr     p15, 0, r0, c1, c0, 0     /* Write value back to CP15 System Control register   */
 
     /* setup stack */
     bl      stack_setup
+
+#ifndef __NO_SYSTEM_INIT
+    ldr     r0,=SystemInit
+    blx     r0
+#endif
+    cpsie   i                    /* Unmask interrupts             */
 
     /* clear bss */
     mov     r0, #0
@@ -113,15 +117,8 @@ bss_clear_loop:
     strlo   r0, [r1], #4
     blo     bss_clear_loop
 
-    ldr     r0,=SystemInit
-    blx     r0
-
-    cpsie i             /* 打开全局中断  */
-
     /* start RT-Thread Kernel */
-    ldr     pc, _rtthread_startup
-_rtthread_startup:
-    .word  entry
+    b entry
 
 stack_setup:
     ldr     r0, =stack_top
@@ -179,39 +176,36 @@ vector_irq:
     stmfd   sp!, {r0-r12,lr}
 
     bl      rt_interrupt_enter
-    push {lr}                   /* 保存lr地址 */
-    push {r0-r3, r12}           /* 保存r0-r3，r12寄存器 */
+    push    {lr}                         /* Save return address+4                                */
+    push    {r0-r3, r12}                 /* Push caller save registers                           */
 
-    mrs r0, spsr                 /* 读取spsr寄存器 */
-    push {r0}                    /* 保存spsr寄存器 */
+    mrs     r0, spsr                     /* Save SPRS to allow interrupt reentry                 */
+    push    {r0}
 
-    mrc p15, 4, r1, c15, c0, 0 /* 从CP15的C0寄存器内的值到R1寄存器中
-                                * 参考文档ARM Cortex-A(armV7)编程手册V4.0.pdf P49
-                                * Cortex-A7 Technical ReferenceManua.pdf P68 P138
-                                */
-    add r1, r1, #0X2000         /* GIC基地址加0X2000，也就是GIC的CPU接口端基地址 */
-    ldr r0, [r1, #0XC]          /* GIC的CPU接口端基地址加0X0C就是GICC_IAR寄存器，
-                                * GICC_IAR寄存器保存这当前发生中断的中断号，我们要根据
-                                * 这个中断号来绝对调用哪个中断服务函数
-                                */
-    push {r0, r1}               /* 保存r0,r1 */
+    mrc     P15, 4, r1, C15, C0, 0       /* Get GIC base address                                 */
+    add     r1, r1, #0x2000              /* r1: GICC base address                                */
+    ldr     r0, [r1, #0xC]               /* r0: IAR                                              */
 
-    cps #0x13                   /* 进入SVC模式，允许其他中断再次进去 */
+    push    {r0, r1}
 
-    push {lr}                   /* 保存SVC模式的lr寄存器 */
-    ldr r2, =rt_hw_trap_irq     /* 加载C语言中断处理函数到r2寄存器中*/
-    blx r2                      /* 运行C语言中断处理函数，带有一个参数，保存在R0寄存器中 */
+    cps     #0x13                        /* Change to Supervisor mode to allow interrupt reentry */
 
-    pop {lr}                    /* 执行完C语言中断服务函数，lr出栈 */
-    cps #0x12                   /* 进入IRQ模式 */
-    pop {r0, r1}
-    str r0, [r1, #0X10]         /* 中断执行完成，写EOIR */
+    push    {lr}                         /* Save Supervisor lr                                   */
+    ldr     r2, =rt_hw_trap_irq
+    blx     r2                           /* Call SystemIrqHandler with param GCC                 */
+    pop     {lr}
 
-    pop {r0}
-    msr spsr_cxsf, r0           /* 恢复spsr */
+    cps     #0x12                        /* Back to IRQ mode                                     */
 
-    pop {r0-r3, r12}            /* r0-r3,r12出栈 */
-    pop {lr}                    /* lr出栈 */
+    pop     {r0, r1}
+
+    str     r0, [r1, #0x10]              /* Now IRQ handler finished: write to EOIR              */
+
+    pop     {r0}
+    msr     spsr_cxsf, r0
+
+    pop     {r0-r3, r12}
+    pop     {lr}
 
     bl      rt_interrupt_leave
 
@@ -313,54 +307,6 @@ vector_resv:
     bl      rt_hw_trap_resv
     b       .
 
-#ifdef RT_USING_SMP
-.global set_secondary_cpu_boot_address
-set_secondary_cpu_boot_address:
-    ldr r0, =secondary_cpu_start
-
-    mvn r1, #0 //0xffffffff
-    ldr r2, =0x10000034
-    str r1, [r2]
-    str r0, [r2, #-4]
-    mov pc, lr
-
-.global secondary_cpu_start
-secondary_cpu_start:
-
-#ifdef RT_USING_FPU
-    mov r4, #0xfffffff
-    mcr p15, 0, r4, c1, c0, 2
-#endif
-
-    mrc p15, 0, r1, c1, c0, 1
-    mov r0, #(1<<6)
-    orr r1, r0
-    mcr p15, 0, r1, c1, c0, 1 //enable smp
-
-    mrc p15, 0, r0, c1, c0, 0
-    bic r0, #(1<<13)
-    mcr p15, 0, r0, c1, c0, 0
-
-#ifdef RT_USING_FPU
-    cps #Mode_UND
-    ldr sp, =und_stack_2_limit
-#endif
-
-    cps #Mode_IRQ
-    ldr sp, =irq_stack_2_limit
-
-    cps #Mode_FIQ
-    ldr sp, =irq_stack_2_limit
-
-    cps #Mode_SVC
-    ldr sp, =svc_stack_2_limit
-
-    /* initialize the mmu table and enable mmu */
-    bl rt_hw_mmu_init
-
-    b secondary_cpu_c_start
-#endif
-
 .bss
 .align 2   //align to  2~2=4
 svc_stack_2:
@@ -371,8 +317,3 @@ irq_stack_2:
     .space (1 << 10)
 irq_stack_2_limit:
 
-#ifdef RT_USING_FPU
-und_stack_2:
-    .space (1 << 10)
-und_stack_2_limit:
-#endif

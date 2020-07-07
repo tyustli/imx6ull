@@ -152,58 +152,6 @@ void rt_hw_trap_resv(struct rt_hw_exp_stack *regs)
 #endif
 }
 
-// void rt_hw_trap_irq(void)
-// {
-//     void *param;
-//     int ir;
-//     rt_isr_handler_t isr_func;
-//     extern struct rt_irq_desc isr_table[];
-
-//     ir = rt_hw_interrupt_get_irq();
-
-//     if (ir == 1023)
-//     {
-//         /* Spurious interrupt */
-//         return;
-//     }
-
-//     /* get interrupt service routine */
-//     isr_func = isr_table[ir].handler;
-// #ifdef RT_USING_INTERRUPT_INFO
-//     isr_table[ir].counter++;
-// #endif
-//     if (isr_func)
-//     {
-//         /* Interrupt for myself. */
-//         param = isr_table[ir].param;
-//         /* turn to interrupt service routine */
-//         isr_func(ir, param);
-//     }
-
-//     /* end of interrupt */
-//     rt_hw_interrupt_ack(ir);
-// }
-
-// void rt_hw_trap_fiq(void)
-// {
-//     void *param;
-//     int ir;
-//     rt_isr_handler_t isr_func;
-//     extern struct rt_irq_desc isr_table[];
-
-//     ir = rt_hw_interrupt_get_irq();
-
-//     /* get interrupt service routine */
-//     isr_func = isr_table[ir].handler;
-//     param = isr_table[ir].param;
-
-//     /* turn to interrupt service routine */
-//     isr_func(ir, param);
-
-//     /* end of interrupt */
-//     rt_hw_interrupt_ack(ir);
-// }
-
 void rt_hw_trap_fiq(unsigned int giccIar)
 {
     SystemIrqHandler(giccIar);

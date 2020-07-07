@@ -62,7 +62,7 @@ static void epit1_init(unsigned int frac, unsigned int value)
 void rt_hw_board_init(void)
 {
     SystemInitIrqTable();
-    epit1_init(0, 660000 / 2);
+    epit1_init(0, 66000000 / RT_TICK_PER_SECOND);
 
     /* Heap initialization */
 #if defined(RT_USING_HEAP)
