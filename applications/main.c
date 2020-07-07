@@ -181,6 +181,7 @@ int main(int argc, char *argv[])
 {
     clk_enable();
     led_init();
+    rt_kprintf("hello tyustli\r\n");
     while(1)
     {
         led_on();
