@@ -313,7 +313,7 @@ int libc_get_time(struct timespec *time)
     /* initialize system time */
     if (inited == 0)
     {
-        libc_system_time_init();
+        // libc_system_time_init();
         inited = 1;
     }
 
@@ -396,6 +396,11 @@ _free_r (struct _reent *ptr, void *addr)
     rt_free (addr);
 }
 
+void
+_write()
+{
+
+}
 void
 exit (int status)
 {
