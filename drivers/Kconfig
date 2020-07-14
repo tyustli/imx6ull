@@ -8,17 +8,8 @@ config SOC_IMX6ULL
 
 menu "Onboard Peripheral Drivers"
 
-endmenu
-
-menu "On-chip Peripheral Drivers"
-
-endmenu
-
-menu "Board extended module Drivers"
-
     config BSP_USING_GPIO
         bool "Enable GPIO"
-        select RT_USING_PIN
         default n
 
     menuconfig BSP_USING_UART
@@ -61,6 +52,14 @@ menu "Board extended module Drivers"
                 bool "Enable SPI2 BUS"
                 default n
         endif
+
+endmenu
+
+menu "On-chip Peripheral Drivers"
+
+endmenu
+
+menu "Board extended module Drivers"
 
 endmenu
 

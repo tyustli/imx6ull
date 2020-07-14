@@ -145,11 +145,13 @@
 
 /* Onboard Peripheral Drivers */
 
+#define BSP_USING_GPIO
+#define BSP_USING_UART
+#define BSP_USING_UART1
+
 /* On-chip Peripheral Drivers */
 
 /* Board extended module Drivers */
 
-#define BSP_USING_UART
-#define BSP_USING_UART1
 
 #endif

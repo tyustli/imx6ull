@@ -185,9 +185,9 @@ int main(int argc, char *argv[])
     while(1)
     {
         led_on();
-        rt_thread_mdelay(100);
+        rt_thread_mdelay(500);
         led_off();
-        rt_thread_mdelay(100);
+        rt_thread_mdelay(500);
     }
     return 0;
 }
