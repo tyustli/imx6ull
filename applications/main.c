@@ -25,9 +25,9 @@ int main(int argc, char *argv[])
     while(1)
     {
         GPIO_WritePinOutput(GPIO1, 3, 1);
-        rt_thread_mdelay(500);
+        rt_thread_mdelay(100);
         GPIO_WritePinOutput(GPIO1, 3, 0);
-        rt_thread_mdelay(500);
+        rt_thread_mdelay(100);
     }
 
     return 0;

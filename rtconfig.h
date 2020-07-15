@@ -66,6 +66,10 @@
 
 /* Device Drivers */
 
+#define RT_USING_DEVICE_IPC
+#define RT_PIPE_BUFSZ 512
+#define RT_USING_SERIAL
+#define RT_SERIAL_RB_BUFSZ 64
 
 /* Using USB */
 
