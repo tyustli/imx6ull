@@ -9,8 +9,33 @@
  */
 
 #include "drv_uart.h"
+#include "fsl_uart.h"
 
 static struct rt_serial_device uart_config;
+
+static void uart_isr(struct rt_serial_device *device_serial)
+{
+    uint8_t data;
+
+    /* If new data arrived. */
+    if ((UART_GetStatusFlag(UART1, kUART_RxDataReadyFlag)))
+    {
+        data = UART_ReadByte(UART1);
+        rt_kprintf("%c\r\n", data);
+    }
+}
+
+
+void UART1_IRQHandler(void)
+{
+    /* enter interrupt */
+    rt_interrupt_enter();
+
+    uart_isr(&uart_config);
+
+    /* leave interrupt */
+    rt_interrupt_leave();
+}
 
 static void uart_init(void)
 {
@@ -25,7 +50,13 @@ static void uart_init(void)
     UART1->UBIR = 71;
     UART1->UBMR = 3124;
     UART1->UCR1 |= (1 << 0);
+
+    /* Enable RX interrupt. */
+    UART_EnableInterrupts(UART1, kUART_RxDataReadyEnable);
+    EnableIRQ(UART1_IRQn);
+    SystemInstallIrqHandler(UART1_IRQn, (system_irq_handler_t)UART1_IRQHandler, NULL);
 }
+
 
 static rt_err_t imx6ull_configure(struct rt_serial_device *serial, struct serial_configure *cfg)
 {

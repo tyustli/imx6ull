@@ -8,6 +8,9 @@ system_MCIMX6Y2.c
 if GetDepend(['BSP_USING_GPIO']):
     src += ['drivers/fsl_gpio.c']
 
+if GetDepend(['BSP_USING_UART']):
+    src += ['drivers/fsl_uart.c']
+
 path = [cwd,
         cwd + '/drivers']
 
