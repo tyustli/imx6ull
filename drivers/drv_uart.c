@@ -11,27 +11,23 @@
 #include "drv_uart.h"
 #include "fsl_uart.h"
 
-static struct rt_serial_device uart_config;
+static struct rt_serial_device uart_obj;
 
 static void uart_isr(struct rt_serial_device *device_serial)
 {
-    uint8_t data;
-
     /* If new data arrived. */
     if ((UART_GetStatusFlag(UART1, kUART_RxDataReadyFlag)))
     {
-        data = UART_ReadByte(UART1);
-        rt_kprintf("%c\r\n", data);
+        rt_hw_serial_isr(&uart_obj, RT_SERIAL_EVENT_RX_IND);
     }
 }
 
-
-void UART1_IRQHandler(void)
+static void UART1_IRQHandler(void)
 {
     /* enter interrupt */
     rt_interrupt_enter();
 
-    uart_isr(&uart_config);
+    uart_isr(&uart_obj);
 
     /* leave interrupt */
     rt_interrupt_leave();
@@ -51,10 +47,7 @@ static void uart_init(void)
     UART1->UBMR = 3124;
     UART1->UCR1 |= (1 << 0);
 
-    /* Enable RX interrupt. */
-    UART_EnableInterrupts(UART1, kUART_RxDataReadyEnable);
-    EnableIRQ(UART1_IRQn);
-    SystemInstallIrqHandler(UART1_IRQn, (system_irq_handler_t)UART1_IRQHandler, NULL);
+    return;
 }
 
 
@@ -65,21 +58,43 @@ static rt_err_t imx6ull_configure(struct rt_serial_device *serial, struct serial
 
 static rt_err_t imx6ull_control(struct rt_serial_device *serial, int cmd, void *arg)
 {
+    switch(cmd)
+    {
+    case RT_DEVICE_CTRL_CLR_INT:
+        DisableIRQ(UART1_IRQn);
+        break;
+    case RT_DEVICE_CTRL_SET_INT:
+        UART_EnableInterrupts(UART1, kUART_RxDataReadyEnable);
+        EnableIRQ(UART1_IRQn);
+        SystemInstallIrqHandler(UART1_IRQn, (system_irq_handler_t)UART1_IRQHandler, NULL);
+        break;
+    default:
+        break;
+    }
     return RT_EOK;
 }
 
 static int imx6ull_putc(struct rt_serial_device *serial, char c)
 {
-    while (((UART1->USR2 >> 3) & 0X01) == 0);
-    UART1->UTXD = c & 0XFF;
+    while(!UART_GetStatusFlag(UART1, kUART_TxEmptyFlag));
+    UART_WriteByte(UART1, c);
 
     return 1;
 }
 
 static int imx6ull_getc(struct rt_serial_device *serial)
 {
-    while ((UART1->USR2 & 0x1) == 0);
-    return UART1->URXD;
+    int ch = -1;
+    if ((UART_GetStatusFlag(UART1, kUART_RxDataReadyFlag)))
+    {
+        ch = UART_ReadByte(UART1);
+    }
+    else
+    {
+        ch = -1;
+    }
+
+    return ch;
 }
 
 static rt_size_t imx6ull_dma_transmit(struct rt_serial_device *serial, rt_uint8_t *buf, rt_size_t size, int direction)
@@ -98,11 +113,10 @@ static const struct rt_uart_ops imx6ull_uart_ops =
 
 int rt_hw_uart_init(void)
 {
-
     struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
 
-    uart_config.ops    = &imx6ull_uart_ops;
-    uart_config.config = config;
+    uart_obj.ops    = &imx6ull_uart_ops;
+    uart_obj.config = config;
 
     /* init uart io */
     IOMUXC_SetPinMux(IOMUXC_UART1_RX_DATA_UART1_RX, 0U);
@@ -119,7 +133,7 @@ int rt_hw_uart_init(void)
 
     uart_init();
 
-    rt_hw_serial_register(&uart_config,
+    rt_hw_serial_register(&uart_obj,
                          "uart1",
                          RT_DEVICE_FLAG_RDWR | RT_DEVICE_FLAG_INT_RX | RT_DEVICE_FLAG_INT_TX,
                          NULL);
