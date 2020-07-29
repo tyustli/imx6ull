@@ -18,7 +18,6 @@
 - RT -     Thread Operating System
  / | \     4.0.3 build Jul  7 2020
  2006 - 2020 Copyright by rt-thread team
-hello tyustli
 msh >
 msh >ps
 thread   pri  status      sp     stack size max used left tick  error
@@ -34,7 +33,7 @@ msh >
 
 | **外设** | **支持情况** | **备注** |
 |:-------------|:------------:|:--------:|
-| UART         |     支持     |    无设备驱动框架      |
+| UART         |     支持     |    UART1     |
 
 ## 联系人信息
 
