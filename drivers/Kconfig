@@ -108,11 +108,16 @@ menu "Onboard Peripheral Drivers"
 
     menuconfig BSP_USING_SDIO
         bool "Enable SDIO"
+        select RT_USING_DFS
         select RT_USING_SDIO
         default n
 
     menuconfig BSP_USING_ETH
         bool "Enable ETH"
+        default n
+
+    menuconfig BSP_USING_LCD
+        bool "Enable LCD"
         default n
 
     menuconfig BSP_USING_USB_DEVICE
