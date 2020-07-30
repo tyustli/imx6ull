@@ -26,6 +26,44 @@ menu "Onboard Peripheral Drivers"
             default n
         endif
 
+    menuconfig BSP_USING_ADC
+        bool "Enable ADC"
+        select RT_USING_ADC
+        default n
+        if BSP_USING_ADC
+            config BSP_USING_ADC1
+            bool "Enable ADC1"
+            default n
+
+            config BSP_USING_ADC2
+            bool "Enable ADC2"
+            default n
+        endif
+
+    menuconfig BSP_USING_DAC
+        bool "Enable DAC"
+        select RT_USING_DAC
+        default n
+        if BSP_USING_DAC
+            config BSP_USING_DAC1
+            bool "Enable DAC1"
+            default n
+
+            config BSP_USING_DAC2
+            bool "Enable DAC2"
+            default n
+        endif
+
+    menuconfig BSP_USING_RTC
+        bool "Enable RTC"
+        select RT_USING_RTC
+        default n
+
+    menuconfig BSP_USING_WDT
+        bool "Enable RTC"
+        select RT_USING_WDT
+        default n
+
     menuconfig BSP_USING_I2C
         bool "Enable I2C BUS"
         default n
@@ -53,6 +91,39 @@ menu "Onboard Peripheral Drivers"
                 bool "Enable SPI2 BUS"
                 default n
         endif
+
+    menuconfig BSP_USING_CAN
+        bool "Enable CAN"
+        select RT_USING_CAN
+        default n
+        if BSP_USING_CAN
+            config BSP_USING_CAN1
+            bool "Enable CAN1"
+            default n
+
+            config BSP_USING_CAN2
+            bool "Enable CAN2"
+            default n
+        endif
+
+    menuconfig BSP_USING_SDIO
+        bool "Enable SDIO"
+        select RT_USING_SDIO
+        default n
+
+    menuconfig BSP_USING_ETH
+        bool "Enable ETH"
+        default n
+
+    menuconfig BSP_USING_USB_DEVICE
+        bool "Enable USB Device"
+        select RT_USING_USB_DEVICE
+        default n
+
+    menuconfig BSP_USING_USB_HOST
+        bool "Enable USB Host"
+        select RT_USING_USB_HOST
+        default n
 
 endmenu
 

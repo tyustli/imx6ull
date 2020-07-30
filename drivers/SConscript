@@ -19,6 +19,33 @@ if GetDepend(['BSP_USING_I2C']):
 if GetDepend(['BSP_USING_SPI']):
     src += ['drv_spi.c']
 
+if GetDepend(['BSP_USING_CAN']):
+    src += ['drv_can.c']
+
+if GetDepend(['BSP_USING_ADC']):
+    src += ['drv_adc.c']
+
+if GetDepend(['BSP_USING_DAC']):
+    src += ['drv_dac.c']
+
+if GetDepend(['BSP_USING_WDT']):
+    src += ['drv_wdt.c']
+
+if GetDepend(['BSP_USING_RTC']):
+    src += ['drv_rtc.c']
+
+if GetDepend(['BSP_USING_USB_DEVICE']):
+    src += ['drv_usbd.c']
+
+if GetDepend(['BSP_USING_USB_HOST']):
+    src += ['drv_usbh.c']
+
+if GetDepend(['BSP_USING_ETH']):
+    src += ['drv_eth.c']
+
+if GetDepend(['BSP_USING_SDIO']):
+    src += ['drv_sdio.c']
+
 CPPDEFINES = ['CPU_MCIMX6Y2CVM08']
 
 group = DefineGroup('drivers', src, depend = [''], CPPPATH = path, CPPDEFINES=CPPDEFINES)
