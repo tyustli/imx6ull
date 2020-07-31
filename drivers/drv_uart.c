@@ -8,6 +8,11 @@
  * 2020-07-02     tyustli   first version
  */
 
+#include "rtconfig.h"
+
+#ifdef BSP_USING_UART
+
+#include "board.h"
 #include "drv_uart.h"
 #include "fsl_uart.h"
 
@@ -140,3 +145,7 @@ int rt_hw_uart_init(void)
 
     return 0;
 }
+
+#endif /* BSP_USING_UART */
+
+/*************************** end of file *******************************/

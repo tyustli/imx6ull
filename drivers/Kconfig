@@ -10,6 +10,7 @@ menu "Onboard Peripheral Drivers"
 
     config BSP_USING_GPIO
         bool "Enable GPIO"
+        select RT_USING_PIN
         default n
 
     menuconfig BSP_USING_UART

@@ -13,6 +13,7 @@
 #include "fsl_common.h"
 #include "fsl_iomuxc.h"
 #include "MCIMX6Y2.h"
+#include <rtthread.h>
 
 extern unsigned char __bss_end;
 #define HEAP_BEGIN    (void*)&__bss_end

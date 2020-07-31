@@ -11,6 +11,10 @@
 #ifndef __DRV_UART_H__
 #define __DRV_UART_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <rthw.h>
@@ -18,4 +22,10 @@
 
 int rt_hw_uart_init(void);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif  /* __DRV_UART_H__ */
+
+/*************************** end of file *******************************/
