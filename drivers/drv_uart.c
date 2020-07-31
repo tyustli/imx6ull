@@ -12,9 +12,7 @@
 
 #ifdef BSP_USING_UART
 
-#include "board.h"
 #include "drv_uart.h"
-#include "fsl_uart.h"
 
 static struct rt_serial_device uart_obj;
 

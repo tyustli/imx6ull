@@ -7,3 +7,20 @@
  * Date           Author       Notes
  * 2020-07-30     tyustli   first version
  */
+
+#ifndef __DRV_RTC_H
+#define __DRV_RTC_H
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __DRV_RTC_H */
+
+/*************************** end of file *******************************/

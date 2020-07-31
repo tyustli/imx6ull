@@ -10,10 +10,19 @@
 
 #ifndef _BOARD_H_
 #define _BOARD_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "fsl_common.h"
 #include "fsl_iomuxc.h"
 #include "MCIMX6Y2.h"
 #include <rtthread.h>
+
+#ifdef RT_USING_DEVICE
+#include <rtdevice.h>
+#endif
 
 extern unsigned char __bss_end;
 #define HEAP_BEGIN    (void*)&__bss_end
@@ -21,4 +30,10 @@ extern unsigned char __bss_end;
 
 void rt_hw_board_init(void);
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif
+
+/*************************** end of file *******************************/

@@ -7,3 +7,20 @@
  * Date           Author       Notes
  * 2020-07-30     tyustli   first version
  */
+
+#ifndef __DRV_ADC_H
+#define __DRV_ADC_H
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __DRV_ADC_H */
+
+/*************************** end of file *******************************/

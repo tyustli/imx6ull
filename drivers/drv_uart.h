@@ -8,17 +8,15 @@
  * 2020-07-02     tyustli   first version
  */
 
-#ifndef __DRV_UART_H__
-#define __DRV_UART_H__
+#ifndef __DRV_UART_H
+#define __DRV_UART_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <rtthread.h>
-#include <rtdevice.h>
-#include <rthw.h>
 #include "board.h"
+#include "fsl_uart.h"
 
 int rt_hw_uart_init(void);
 
@@ -26,6 +24,6 @@ int rt_hw_uart_init(void);
 }
 #endif
 
-#endif  /* __DRV_UART_H__ */
+#endif  /* __DRV_UART_H */
 
 /*************************** end of file *******************************/

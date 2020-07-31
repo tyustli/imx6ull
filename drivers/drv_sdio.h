@@ -7,3 +7,20 @@
  * Date           Author       Notes
  * 2020-07-30     tyustli   first version
  */
+
+#ifndef __DRV_SDIO_H
+#define __DRV_SDIO_H
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __DRV_SDIO_H */
+
+/*************************** end of file *******************************/
