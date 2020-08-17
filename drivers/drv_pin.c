@@ -190,7 +190,35 @@ static const struct imx6ull_pin_index imx6ull_pins[] =
 #endif /* GPIO5 */
 };
 
-static const struct imx6ull_pin_index *get_pin(uint8_t pin)
+static const struct pin_irq_map pin_irq_map[] =
+{
+    {0, GPIO1_Combined_0_15_IRQn},
+    {1, GPIO1_Combined_16_31_IRQn},
+    {2, GPIO2_Combined_0_15_IRQn},
+    {3, GPIO2_Combined_16_31_IRQn},
+    {4, GPIO3_Combined_0_15_IRQn},
+    {5, GPIO3_Combined_16_31_IRQn},
+    {6, GPIO4_Combined_0_15_IRQn},
+    {7, GPIO4_Combined_16_31_IRQn},
+    {8, GPIO5_Combined_0_15_IRQn},
+    {9, GPIO5_Combined_16_31_IRQn},
+};
+
+static struct rt_pin_irq_hdr pin_irq_hdr_tab[] =
+{
+    {-1, 0, RT_NULL, RT_NULL},
+    {-1, 0, RT_NULL, RT_NULL},
+    {-1, 0, RT_NULL, RT_NULL},
+    {-1, 0, RT_NULL, RT_NULL},
+    {-1, 0, RT_NULL, RT_NULL},
+    {-1, 0, RT_NULL, RT_NULL},
+    {-1, 0, RT_NULL, RT_NULL},
+    {-1, 0, RT_NULL, RT_NULL},
+    {-1, 0, RT_NULL, RT_NULL},
+    {-1, 0, RT_NULL, RT_NULL},
+};
+
+struct imx6ull_pin_index *get_pin(uint8_t pin)
 {
     const struct imx6ull_pin_index *index;
 
@@ -265,26 +293,149 @@ static int  imx6ull_pin_read(struct rt_device *device, rt_base_t pin)
     return value;
 }
 
+
 static rt_err_t  imx6ull_pin_attach_irq(struct rt_device *device, rt_int32_t pin, rt_uint32_t mode, void (*hdr)(void *args), void *args)
 {
-    rt_err_t ret = -RT_ERROR;
+    const struct imx6ull_pin_index *index;
+    rt_base_t level;
+    rt_int32_t irqindex = -1;
 
-    return ret;
+    index = get_pin(pin);
+    if (index == RT_NULL)
+    {
+        return RT_ENOSYS;
+    }
+
+    irqindex = index->index / 16;
+    if (irqindex < 0 || irqindex >= ARRAY_LEN(pin_irq_map))
+    {
+        return RT_ENOSYS;
+    }
+
+    level = rt_hw_interrupt_disable();
+    if (pin_irq_hdr_tab[irqindex].pin == pin &&
+            pin_irq_hdr_tab[irqindex].hdr == hdr &&
+            pin_irq_hdr_tab[irqindex].mode == mode &&
+            pin_irq_hdr_tab[irqindex].args == args)
+    {
+        rt_hw_interrupt_enable(level);
+        return RT_EOK;
+    }
+
+    if (pin_irq_hdr_tab[irqindex].pin != -1)
+    {
+        rt_hw_interrupt_enable(level);
+        return RT_EBUSY;
+    }
+
+    pin_irq_hdr_tab[irqindex].pin = pin;
+    pin_irq_hdr_tab[irqindex].hdr = hdr;
+    pin_irq_hdr_tab[irqindex].mode = mode;
+    pin_irq_hdr_tab[irqindex].args = args;
+    SystemInstallIrqHandler(pin_irq_map[irqindex].irqno, (system_irq_handler_t)(uint32_t)hdr, args);
+    rt_hw_interrupt_enable(level);
+
+    return RT_EOK;
 }
 
 static rt_err_t  imx6ull_pin_detach_irq(struct rt_device *device, rt_int32_t pin)
 {
-    rt_err_t ret = -RT_ERROR;
+    const struct imx6ull_pin_index *index;
+    rt_base_t level;
+    rt_int32_t irqindex = -1;
 
-    return ret;
+    index = get_pin(pin);
+    if (index == RT_NULL)
+    {
+        return RT_ENOSYS;
+    }
+
+    irqindex = index->index / 16;
+    if (irqindex < 0 || irqindex >= ARRAY_LEN(pin_irq_map))
+    {
+        return RT_ENOSYS;
+    }
+
+    level = rt_hw_interrupt_disable();
+    if (pin_irq_hdr_tab[irqindex].pin == -1)
+    {
+        rt_hw_interrupt_enable(level);
+        return RT_EOK;
+    }
+    pin_irq_hdr_tab[irqindex].pin = -1;
+    pin_irq_hdr_tab[irqindex].mode = 0;
+    pin_irq_hdr_tab[irqindex].hdr = RT_NULL;
+    pin_irq_hdr_tab[irqindex].args = RT_NULL;
+    rt_hw_interrupt_enable(level);
+
+    return RT_EOK;
 }
 
 static rt_err_t  imx6ull_pin_irq_enable(struct rt_device *device, rt_base_t pin, rt_uint32_t enabled)
 {
-    rt_err_t ret = -RT_ERROR;
+    const struct imx6ull_pin_index *index;
+    const struct pin_irq_map *irqmap;
+    rt_base_t level;
+    rt_int32_t irqindex = -1;
 
-    return ret;
+    index = get_pin(pin);
+    if (index == RT_NULL)
+    {
+        return RT_ENOSYS;
+    }
+
+    irqindex = index->index / 16;
+    if (irqindex < 0 || irqindex >= ARRAY_LEN(pin_irq_map))
+    {
+        return RT_ENOSYS;
+    }
+
+    if(enabled == PIN_IRQ_ENABLE)
+    {
+        level = rt_hw_interrupt_disable();
+
+        if (pin_irq_hdr_tab[irqindex].pin == -1)
+        {
+            rt_hw_interrupt_enable(level);
+            return RT_ENOSYS;
+        }
+
+        irqmap = &pin_irq_map[irqindex];
+
+        EnableIRQ(irqmap->irqno);
+        switch (pin_irq_hdr_tab[irqindex].mode)
+        {
+        case PIN_IRQ_MODE_RISING:
+            GPIO_SetPinInterruptConfig(index->gpio, index->pin, kGPIO_IntRisingEdge);
+            break;
+        case PIN_IRQ_MODE_FALLING:
+            GPIO_SetPinInterruptConfig(index->gpio, index->pin, kGPIO_IntFallingEdge);
+            break;
+        case PIN_IRQ_MODE_RISING_FALLING:
+            GPIO_SetPinInterruptConfig(index->gpio, index->pin, kGPIO_IntRisingOrFallingEdge);
+            break;
+        case PIN_IRQ_MODE_HIGH_LEVEL:
+            GPIO_SetPinInterruptConfig(index->gpio, index->pin, kGPIO_IntHighLevel);
+            break;
+        case PIN_IRQ_MODE_LOW_LEVEL:
+            GPIO_SetPinInterruptConfig(index->gpio, index->pin, kGPIO_IntLowLevel);
+            break;
+        }
+        GPIO_EnableInterrupts(index->gpio, 1 << index->pin);
+    }
+    else if (enabled == PIN_IRQ_DISABLE)
+    {
+        irqmap = &pin_irq_map[irqindex];
+        DisableIRQ(irqmap->irqno);
+    }
+    else
+    {
+        return -RT_ENOSYS;
+    }
+    
+    return RT_EOK;
 }
+
 static const struct rt_pin_ops imx6ull_pin_ops = 
 {
     .pin_mode = imx6ull_pin_mode,

@@ -35,7 +35,14 @@ struct imx6ull_pin_index
     uint32_t pin;
 };
 
+struct pin_irq_map
+{
+    rt_uint8_t irqindex;
+    IRQn_Type irqno;
+};
+
 int rt_hw_pin_init(void);
+struct imx6ull_pin_index *get_pin(uint8_t pin);
 
 #ifdef __cplusplus
 }

@@ -19,6 +19,7 @@ extern "C" {
 #include "fsl_iomuxc.h"
 #include "MCIMX6Y2.h"
 #include <rtthread.h>
+#include <rthw.h>
 
 #ifdef RT_USING_DEVICE
 #include <rtdevice.h>
