@@ -176,6 +176,7 @@ vector_irq:
     stmfd   sp!, {r0-r12,lr}
 
     bl      rt_interrupt_enter
+
     push    {lr}                         /* Save return address+4                                */
     push    {r0-r3, r12}                 /* Push caller save registers                           */
 
